@@ -1,30 +1,27 @@
 import React from "react";
-import "./Main.scss";
-import { AIcon } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function Main() {
   return (
-    <div>
+    <div className="mainFrame">
+      <div className="mainQuestion">어떤 아파트를 찾으세요?</div>
+      <div className="btn-area">
+        <input className="btn-main" type="button" value="매물" />
+        <input className="btn-main" type="button" value="분양" />
+      </div>
       <div>
-        <div className="search-container">
-          <div className="search__inner">
-            <h1 className="search__title">어떤 아파트를 찾으세요?</h1>
-            <div className="search__option-btn-group">
-              <p className="search__option-btn">매물</p>
-              <p className="search__option-btn">분양</p>
-            </div>
-            <form className="search__form">
-              <label htmlFor="search-input">
-                {/* <AIcon type="search" class="search__form__icon" /> */}
-              </label>
-              <input
-                type="text"
-                id="search-input"
-                placeholder="지역 또는 단지명을 입력하세요."
-              />
-            </form>
-          </div>
-        </div>
+        <form>
+          <input
+            className="search"
+            type="text"
+            placeholder="지역 또는 단지명을 입력하세요. "
+          />
+
+          <button style={{ margin: "5px" }} type="submit">
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="3x" />
+          </button>
+        </form>
       </div>
     </div>
   );

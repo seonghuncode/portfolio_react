@@ -19,3 +19,54 @@ li {
 #app {
   font-family: "Spoqa Han Sans Neo", "sans-serif";
 }
+
+/*========================== Main.js에 대한 CSS==================================*/
+
+.mainFrame {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 80%;
+  margin: 0px auto;
+  flex-direction: column;
+}
+
+.mainQuestion {
+  padding: 15px;
+  border: 3px solid blue;
+  font-size: 40px;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.btn-main {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 10px;
+  border: none;
+  margin: 5px 5px 5px 0px;
+}
+
+.btn-area {
+  width: 100%;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  margin-top: 70px;
+  margin-bottom: 5px;
+}
+
+.search {
+  font-size: 28px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 500px;
+  border-radius: 5px;
+}
+
+/*========================== Main.js에 대한 CSS==================================*/
