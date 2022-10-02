@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
-import { parseStr } from "./helper/common-helper.js";
+import { parseStr } from "../helper/common-helper.js";
 import axios from "axios";
 
 function Main() {
@@ -13,7 +13,7 @@ function Main() {
       "WM+MJ1skpxpAh/LF6vyhnwEyYL6jE0z2qKopFOydxC8gt8G9cJ9sQror5m99zhcElmmdgcYb/sWQ+6jNqjdGCA==";
 
     await axios({
-      url: "sds",
+      url: "미정",
       method: "get",
       params: {
         serviceKey: serviceKey,
