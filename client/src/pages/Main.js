@@ -13,7 +13,7 @@ function Main() {
       "WM+MJ1skpxpAh/LF6vyhnwEyYL6jE0z2qKopFOydxC8gt8G9cJ9sQror5m99zhcElmmdgcYb/sWQ+6jNqjdGCA==";
 
     await axios({
-      url: "미정",
+      url: url,
       method: "get",
       params: {
         serviceKey: serviceKey,
@@ -22,11 +22,14 @@ function Main() {
       },
     })
       .then((response) => {
+        console.log("response정보");
         console.log(response);
+        console.log("response.data정보");
         console.log(response.date);
 
         //JSON데이터로 변환
         const jsonData = parseStr(response.data);
+        console.log("jsonData정보");
         console.log(jsonData);
 
         //바꾼데이터를 변환 시키기
