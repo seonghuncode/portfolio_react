@@ -10,11 +10,9 @@ import { BrowserRouter } from "react-router-dom"; //react-router-dom라이브러
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 );
 
 reportWebVitals();

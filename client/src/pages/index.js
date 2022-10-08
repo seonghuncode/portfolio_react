@@ -1,3 +1,4 @@
 import Main from "./Main";
+import Join from "./Join";
 
-export { Main };
+export { Main, Join };

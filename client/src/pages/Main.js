@@ -4,8 +4,12 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 import { parseStr } from "../helper/common-helper.js";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Main() {
+  const navigation = useNavigate();
+  const [apartData, setapartData] = React.useState({});
+  const [Loading, setLoading] = React.useState(true);
   const apartAPI = async () => {
     const url =
       "https://cors-anywhere.herokuapp.com/http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
@@ -14,33 +18,43 @@ function Main() {
 
     await axios({
       url: url,
-      method: "get",
       params: {
         serviceKey: serviceKey,
-        numOfRows: 50,
-        pageNo: 1,
+
+        LAWD_CD: 11110,
+        DEAL_YMD: 201512,
       },
     })
       .then((response) => {
-        console.log("response정보");
-        console.log(response);
-        console.log("response.data정보");
-        console.log(response.date);
+        // console.log("response정보");
+        // console.log(response);
+        // console.log("response.data정보");
+        // console.log(response.date);
 
         //JSON데이터로 변환
-        const jsonData = parseStr(response.data);
-        console.log("jsonData정보");
-        console.log(jsonData);
+        // const jsonData = parseStr(response.data);
+        // console.log("jsonData정보");
+        console.log(response);
+        console.log("0번째 데이터");
+        console.log(response.data.response.body.items.item[0]);
+
+        const data = response.data.response.body.items;
+        setapartData(data);
+        console.log(apartData);
 
         //바꾼데이터를 변환 시키기
       })
       .catch(() => {
-        console.log("에러!!");
+        console.log("apart API 에러!!");
       });
+
+    setLoading(false);
   };
   React.useEffect(() => {
     apartAPI();
   }, []);
+
+  console.log(apartData);
 
   return (
     <div>
@@ -56,12 +70,16 @@ function Main() {
             type="button"
             className="main-login btn-nomal-main"
             value="회원가입"
+            onClick={() => {
+              navigation("join");
+            }}
           />
 
           <input
             type="button"
             className="main-login btn-nomal-main"
             value="로그인"
+            // onClick={}
           />
 
           <input
@@ -103,28 +121,39 @@ function Main() {
           </form>
         </div>
       </div>
-
       {/* 추천 매물 아래는 공공 데이터를 불러와 뿌려주는 작업 */}
-      <div className="bottom-area">
-        <div>
-          <div className="introduce" type="button" value="추천매물">
-            추천매물
-            <button
-              type="button"
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-              }}
-            >
-              <FontAwesomeIcon
-                style={{ padding: "1px" }}
-                icon={faMagnifyingGlassLocation}
-                size="2x"
-              />
-            </button>
+      {Loading ? (
+        <div>로딩중</div>
+      ) : (
+        <div className="bottom-area">
+          <div>
+            <div className="introduce" type="button" value="추천매물">
+              추천매물
+              <button
+                type="button"
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                }}
+              >
+                <FontAwesomeIcon
+                  style={{ padding: "1px" }}
+                  icon={faMagnifyingGlassLocation}
+                  size="2x"
+                />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {/**추천 매울에 대한 정보를 정리해서 보여준다*/}
+      {/* 한번에 가지고 온 50개의 데이터를 5개를 랜덤 숫자를 뽑아 5개의 값을 추천으로 보여 준다. */}
+
+      <div
+        onClick={() => {
+          apartData();
+        }}
+      ></div>
     </div>
   );
 }
