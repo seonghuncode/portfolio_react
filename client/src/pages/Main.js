@@ -9,8 +9,21 @@ import { useNavigate } from "react-router-dom";
 function Main() {
   const navigation = useNavigate();
   const [apartData, setapartData] = React.useState({});
-  const [Loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(true); //아래서 삼항식을 통해 true이면 로딩화면을 false이면 회면을 보여주기 위한 변수
+
+  //리액트에서 api를 불러오는 방법이 아니라 server에서 불러오는 방법
+  const apartAPIServer = async () => {
+    await axios({
+      url: "http://localhost:5000/apartAPI",
+    })
+      .then((response) => {})
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const apartAPI = async () => {
+    //
     const url =
       "https://cors-anywhere.herokuapp.com/http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
     const serviceKey =
@@ -54,7 +67,7 @@ function Main() {
     apartAPI();
   }, []);
 
-  console.log(apartData);
+  console.log(apartData); //실행 순서는 항상 return을 먼저 보여주고 useEffect를 실행시켜 apartAPI를 실행 시키는 순서이다.
 
   return (
     <div>
@@ -122,7 +135,7 @@ function Main() {
         </div>
       </div>
       {/* 추천 매물 아래는 공공 데이터를 불러와 뿌려주는 작업 */}
-      {Loading ? (
+      {loading ? (
         <div>로딩중</div>
       ) : (
         <div className="bottom-area">
