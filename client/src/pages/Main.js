@@ -8,8 +8,14 @@ import { useNavigate } from "react-router-dom";
 
 function Main() {
   const navigation = useNavigate();
-  const [apartData, setapartData] = React.useState({});
+  const [apartData, setapartData] = React.useState();
   const [loading, setLoading] = React.useState(true); //아래서 삼항식을 통해 true이면 로딩화면을 false이면 회면을 보여주기 위한 변수
+  const randomValue = []; //랜덤값을 넣기 위한 배열
+
+  //랜덤 값으로 5개를 무작위로
+  const getRandom = function (length) {
+    return parseInt(Math.random() * length);
+  };
 
   //리액트에서 api를 불러오는 방법이 아니라 server에서 불러오기
   const apartAPI = async () => {
@@ -17,7 +23,18 @@ function Main() {
       url: "http://localhost:5000/apartAPI",
     })
       .then((response) => {
-        console.log(response);
+        // 랜덤값 5개를 뽑는 알고리즘
+
+        console.log(response.data);
+        const a = getRandom(response.data.length - 5); //시작값
+        const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
+        for (var i = a; i <= b; i++) {
+          console.log(response.data[i]);
+          randomValue.push(response.data[i]);
+        }
+
+        setapartData(randomValue);
+        console.log(randomValue);
       })
       .catch((e) => {
         console.log(e);
@@ -26,7 +43,7 @@ function Main() {
 
   React.useEffect(() => {
     apartAPI();
-  });
+  }, []); //빈 배열을 넣어 주어야 한번만 실행 된다.(없으면 랜더링 될때마다 실행)
 
   return (
     <div>
@@ -105,7 +122,11 @@ function Main() {
                 backgroundColor: "transparent",
                 border: "none",
               }}
+              onClick={() => {
+                apartAPI();
+              }}
             >
+              {/* 버튼을 누르면 추천 매물 리로딩 */}
               <FontAwesomeIcon
                 style={{ padding: "1px" }}
                 icon={faMagnifyingGlassLocation}
@@ -114,16 +135,30 @@ function Main() {
             </button>
           </div>
         </div>
+
+        {/**추천 매울에 대한 정보를 정리해서 보여준다*/}
+        {/* 한번에 가지고 온 50개의 데이터를 5개를 랜덤 숫자를 뽑아 5개의 값을 추천으로 보여 준다. */}
+
+        <div className="recommend-high">
+          {apartData && //apartData && ==> 값이 있으면 출력하라는 의미
+            apartData.map((item, index) => {
+              console.log(item);
+              return (
+                <div key={index}>
+                  <div className="recommend-frame">
+                    <div>아파트 : {item.아파트}</div>
+                    <div>거래 금액 : {item.거래금액}</div>
+                    <div>건축 년도 : {item.건축년도}</div>
+                    <div>
+                      주소 : {item.도로명}
+                      {item.지번}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
       </div>
-
-      {/**추천 매울에 대한 정보를 정리해서 보여준다*/}
-      {/* 한번에 가지고 온 50개의 데이터를 5개를 랜덤 숫자를 뽑아 5개의 값을 추천으로 보여 준다. */}
-
-      <div
-        onClick={() => {
-          apartData();
-        }}
-      ></div>
     </div>
   );
 }

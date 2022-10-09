@@ -129,4 +129,19 @@ li {
   padding: 17px;
 }
 
+.recommend-high {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+}
+
+.recommend-frame {
+  border: 1px solid black;
+  width: 200px;
+  height: 180px;
+  display: inline-block;
+  margin: 3px;
+  padding: 2px;
+}
+
 /*========================== Main.js에 대한 CSS==================================*/
