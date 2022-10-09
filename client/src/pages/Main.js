@@ -153,6 +153,15 @@ function Main() {
                       주소 : {item.도로명}
                       {item.지번}
                     </div>
+                    <div>
+                      지도 보기 :
+                      <a
+                        href={`https://www.google.com/maps/place/${item.도로명}/${item.지번}`}
+                        target={"_black"}
+                      >
+                        지도
+                      </a>
+                    </div>
                   </div>
                 </div>
               );
