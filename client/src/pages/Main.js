@@ -156,7 +156,8 @@ function Main() {
                     <div>
                       지도 보기 :
                       <a
-                        href={`https://www.google.com/maps/place/${item.도로명}/${item.지번}`}
+                        // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
+                        href={`https://www.google.com/maps/place/${item.도로명}${item.지번}${item.아파트}아파트`}
                         target={"_black"}
                       >
                         지도

@@ -117,7 +117,7 @@ li {
 .bottom-area {
   display: flex;
   justify-content: center;
-  width: 70%;
+  width: 90%;
   margin: 0 auto;
   flex-direction: column;
   margin-top: 50px;
@@ -137,11 +137,12 @@ li {
 
 .recommend-frame {
   border: 1px solid black;
-  width: 200px;
+  width: 260px;
   height: 180px;
   display: inline-block;
   margin: 3px;
-  padding: 2px;
+  padding: 15px;
+  font-size: 20px;
 }
 
 /*========================== Main.js에 대한 CSS==================================*/
