@@ -3,8 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../App";
 
-
-function Login1() {
+function Login() {
   //   const data = React.useContext(StoreContext);
   //   console.log(data); //App.js에 있는 loginUser값이 들어 온다.
   //구조분해 할당 사용
@@ -31,10 +30,21 @@ function Login1() {
       },
     }).then(({ data }) => {
       //성공시 실행되는 코드
+      //받은 값 : 결과, 메세지 user에 대한 data
       console.log(data.user);
-      setLoginUser(data.user);
-      localStorage.setItem("loginUser", JSON.stringgify(data.user));
-      navigation("/");
+      if (data.user != null) {
+        setLoginUser(data.user);
+        //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
+        localStorage.setItem("loginUser", JSON.stringify(data.user)); //setItem("loginUser", data.user) == loginUser라는 객체에 data.user을 넣는다는 의미
+        //오로지 문자열만 넣을수 있기다 -> data.user객체를 문자열로 변환해서 넣어 준다.
+
+        navigation("/");
+      }
+
+      console.log(data.user === null);
+      if (data.user === null) {
+        navigation("/login");
+      }
     });
   };
 
@@ -68,4 +78,4 @@ function Login1() {
   );
 }
 
-export default Login1;
+export default Login;

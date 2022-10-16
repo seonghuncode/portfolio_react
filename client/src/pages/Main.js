@@ -5,7 +5,7 @@ import { faMagnifyingGlassLocation } from "@fortawesome/free-solid-svg-icons";
 import { parseStr } from "../helper/common-helper.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { StoreContext } from "../App";
 
 function Main() {
   const navigation = useNavigate();
@@ -46,10 +46,12 @@ function Main() {
     apartAPI();
   }, []); //빈 배열을 넣어 주어야 한번만 실행 된다.(없으면 랜더링 될때마다 실행)
 
-
+  //로그인 괸련 변수 선언
+  const { loginUser, setLoginUser } = React.useContext(StoreContext);
 
   return (
     <div>
+      안녕하세요 {loginUser.id}님 !{""}
       <div className="mainFrame">
         <div className="nav-main">
           <input
@@ -57,7 +59,19 @@ function Main() {
             className="btn-nomal-main"
             value="오늘의 부동산"
           />
-
+          <input
+            type="button"
+            className="main-login btn-nomal-main"
+            onClick={() => {
+              localStorage.removeItem("loginUser");
+              setLoginUser({
+                id: "",
+                pw: "",
+              });
+              navigation("/login");
+            }}
+            value=" 로그아웃"
+          />
           <input
             type="button"
             className="main-login btn-nomal-main"
@@ -66,12 +80,13 @@ function Main() {
               navigation("join");
             }}
           />
-
           <input
             type="button"
             className="main-login btn-nomal-main"
             value="로그인"
-            // onClick={}
+            onClick={() => {
+              navigation("/login");
+            }}
           />
 
           <input
@@ -80,7 +95,6 @@ function Main() {
             style={{ float: "right" }}
             value="오늘의 뉴스"
           />
-
           <input
             type="button"
             className="btn-nomal-main"
@@ -114,7 +128,6 @@ function Main() {
         </div>
       </div>
       {/* 추천 매물 아래는 공공 데이터를 불러와 뿌려주는 작업 */}
-
       <div className="bottom-area">
         <div>
           <div className="introduce" type="button" value="추천매물">

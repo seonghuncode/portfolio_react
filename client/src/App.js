@@ -1,7 +1,7 @@
 import "./App.css";
 import React from "react";
 import AppIndex from "./AppIndex";
-import {useLocation, useNavigate} from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom";
 
 //로그인이라는 기능을 사용하기 위해서는 무조건 전역변수가 필요하다.(여러 페이지 에서 로그인 정보를 가지고 와야 하기때문이다.)
 //useContext : 리액트 에서의 전역 변수 사용 방법(리액트 내에 있어서 다운 X)
@@ -11,6 +11,8 @@ import {useLocation, useNavigate} from "react-router-dom"
 export const StoreContext = React.createContext({}); // storeContext는 전역 변수가 된다.
 
 function App() {
+  //새로고침 하면 state값은 사라진다 -> 웹에서 기억하도록 해야 한다.
+  //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
   const [loginUser, setLoginUser] = React.useState({
     id: "",
     pw: "",
@@ -18,32 +20,36 @@ function App() {
     //==> 전역변수 사용
   });
 
-const {pathname} = useLocation();
-const navigation = useNavigate();
+  //const location = useLocation ==> 현제 페이지를 불러오는 코드
+  const { pathname } = useLocation();
+  const navigation = useNavigate();
 
-const 주소유효성검증 = () => {
-  const 로그인했을때비접근주소 = ["join", "login"];
-  const 주소 = pathname.slice(1);
+  const 주소유효성검증 = () => {
+    const 로그인했을때비접근주소 = ["join", "login"];
+    const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
 
-  if(로그인했을때비접근주소.includes(주소) && loginUser.id !== ""){
-    navigation("/");
-  }
-}
+    //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
+    //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
+    if (로그인했을때비접근주소.includes(주소) && loginUser.id !== "") {
+      navigation("/");
+    }
+  };
 
-const 자동로그인 = () => {
-  const user = JSON.parse(localStorage.getItem("loginUser"))
-  if(user){
-    setLoginUser(user);
-  }
-}
+  const 자동로그인 = () => {
+    //user에 key값을 가지고온다(문자열) -> 사용할 수 있도록 객체로 바꾸어 준다.
+    const user = JSON.parse(localStorage.getItem("loginUser"));
+    if (user) {
+      setLoginUser(user);
+    }
+  };
 
-React.useEffect(()=>{
-  자동로그인();
-}, [])
+  React.useEffect(() => {
+    자동로그인();
+  }, []);
 
-React.useEffect(()=>{
-  주소유효성검증();
-}, [loginUser])
+  React.useEffect(() => {
+    주소유효성검증();
+  }, [loginUser]); //처음에는 값이 비어있기 때문에 loginUser가 변할때 리로딩을 해줘라
 
   return (
     <StoreContext.Provider

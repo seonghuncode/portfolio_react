@@ -1,5 +1,5 @@
 import Main from "./Main";
 import Join from "./Join";
-import Login1 from "./Login1";
+import Login from "./Login";
 
-export { Main, Join, Login1 };
+export { Main, Join, Login };

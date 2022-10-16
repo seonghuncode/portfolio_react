@@ -85,11 +85,11 @@ const UserDB = {
   ],
 };
 
-//로그인시 서버로 넘어오는 부분
+//로그인시 서버로 넘어오는 부분 (비밀번호릐 경우 암호화 처리 필요!! - js비밀번호 암호화 처리)
 app.get("/login", (req, res) => {
   console.log("받은 데이터");
   // console.log(req.query); //client부분에서 보내는 값을 확인할 수 있다.
-  console.log(JSON.parse(req.query.user)); //문자열로 넘어오기 때문에 객체로 변환
+  console.log(JSON.parse(req.query.user)); //문자열로 넘어오기 때문에 객체로 변환(하얀색 : 문자열, 초록색 : 객체)
 
   const user = JSON.parse(req.query.user); //user라는 객체를 구조분해 할당으로 뺀다
   console.log("넘어온 user");

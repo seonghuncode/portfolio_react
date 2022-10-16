@@ -1,5 +1,5 @@
 function Join() {
-  return null;
+  return <div>Join 페이지</div>;
 }
 
 export default Join;
