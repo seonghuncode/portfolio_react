@@ -71,3 +71,79 @@ app.get("/apartAPI", async function (req, res) {
     }
   );
 });
+
+//user에 관련된 코드---------------------------------------------
+//로그인 정보를 저장 하는 DB
+app.use(cors());
+const UserDB = {
+  user: [
+    //회원수가 여러명이기에 user는 배열로 만든다
+    {
+      id: "a",
+      pw: "a",
+    },
+  ],
+};
+
+app.get("/login", (req, res) => {
+  console.log(req.query);
+  console.log(JSON.parse(req.query.user));
+  const user = JSON.parse(req.query.user);
+  console.log(user.id);
+});
+
+// //로그인시 서버로 넘어오는 부분
+// app.get("/login", (req, res) => {
+//   console.log("받은 데이터");
+//   // console.log(req.query); //client부분에서 보내는 값을 확인할 수 있다.
+
+//   const { user } = req.query; //user라는 객체를 구조분해 할당으로 뺀다
+//   console.log("넘어온 user");
+//   console.log(user);
+//   const id = user.id;
+//   const pw = user.id;
+
+//   const result = {
+//     code: "success",
+//     message: "로그인 되었습니다.",
+//     user: null,
+//   };
+
+//   const 유효성배열 = [1];
+//   //유효성 검증(id, pw가 존재 하는가)
+//   for (let key in 유효성배열) {
+//     //배열을 for in반복문으로 돌린다
+//     if (id === "") {
+//       result.code = "fail";
+//       result.message = "아이디를 입력해 주세요";
+//       break;
+//     }
+//     if (pw === "") {
+//       result.code = "fail";
+//       result.message = "비밀번호를 입력해주세요";
+//       break;
+//     }
+
+//     //존재 하면 로그인 처리를 하는 코드
+//     // const findUser = UserDB.user.find((item) => {
+//     //   return item.id === id && item.pw === pw;
+//     // });
+//     const findUser = UserDB.user.find((item) => {
+//       return item.id === id && item.pw === pw;
+//     });
+//     console.log("findUser");
+//     console.log(findUser);
+
+//     if (findUser === undefined) {
+//       result.code = "fail";
+//       result.message = "정보가 일치하지 않습니다.";
+//       break;
+//     }
+//     result.user = findUser;
+//     res.send(result);
+//   }
+
+//   if (result.code === "fail") {
+//     res.send(result); //반복문이 끝나는 여기로 넘어온 것은 위에서 break되었기 때문이다.
+//   }
+// });
