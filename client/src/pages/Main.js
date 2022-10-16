@@ -6,6 +6,7 @@ import { parseStr } from "../helper/common-helper.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 function Main() {
   const navigation = useNavigate();
   const [apartData, setapartData] = React.useState();
@@ -44,6 +45,8 @@ function Main() {
   React.useEffect(() => {
     apartAPI();
   }, []); //빈 배열을 넣어 주어야 한번만 실행 된다.(없으면 랜더링 될때마다 실행)
+
+
 
   return (
     <div>

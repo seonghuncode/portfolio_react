@@ -1,13 +1,16 @@
 import React from "react";
-import { StoreContext } from "../App";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { StoreContext } from "../App";
+
 
 function Login1() {
   //   const data = React.useContext(StoreContext);
   //   console.log(data); //App.js에 있는 loginUser값이 들어 온다.
   //구조분해 할당 사용
-  const { loginUser } = React.useContext(StoreContext);
+  const { setLoginUser } = React.useContext(StoreContext);
   //   console.log(loginUser);
+  const navigation = useNavigate();
 
   const [user, setUser] = React.useState({
     //여기서 id , pw은 key값이 된다!!
@@ -26,9 +29,12 @@ function Login1() {
       params: {
         user: user,
       },
-    }).then((response) => {
+    }).then(({ data }) => {
       //성공시 실행되는 코드
-      console.log(response);
+      console.log(data.user);
+      setLoginUser(data.user);
+      localStorage.setItem("loginUser", JSON.stringgify(data.user));
+      navigation("/");
     });
   };
 
