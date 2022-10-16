@@ -6,7 +6,7 @@ const request = require("request");
 const convert = require("xml-js");
 const DB = { apart: [] };
 
-app.use(cors()); //cors미들 웨이 추가
+app.use(cors()); //cors미들 웨이 추가 !!
 
 app.get("/", function (req, res) {
   res.send("Hello Node.js");
