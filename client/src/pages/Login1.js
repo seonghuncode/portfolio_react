@@ -10,7 +10,7 @@ function Login1() {
   //   console.log(loginUser);
 
   const [user, setUser] = React.useState({
-    //여기서 id , pw은 key값이 된다
+    //여기서 id , pw은 key값이 된다!!
     id: "",
     pw: "",
   });
