@@ -48,10 +48,16 @@ function Main() {
 
   //로그인 괸련 변수 선언
   const { loginUser, setLoginUser } = React.useContext(StoreContext);
+  //카카오톡 로그인을 위한 키 변수 설정
+  const KAKAO_API_KEY = "98c3a78c484879e5166cd2cdb417472b"; //rest api키
+  const KAKAO_CLIENT_ID = "5be66241f725b198c523fb70a432a8b6"; //javascript키
+  const REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao"; //KAKAO DEDVELOPER에서 설정한 REDIRECT URI 그대로 가지고 온다
+
+  const 카카오소셜로그인링크 = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`; //이 경로로 보내주어야 한다, 카카오 공식 문서에서 이렇게 보내라고 정해 놓았다
 
   return (
     <div>
-      안녕하세요 {loginUser.id}님 !{""}
+      안녕하세요 {loginUser.nickname}님 !{""}
       <div className="mainFrame">
         <div className="nav-main">
           <input
@@ -68,7 +74,8 @@ function Main() {
                 id: "",
                 pw: "",
               });
-              navigation("/login");
+              // navigation("/login");
+              navigation("/");
             }}
             value=" 로그아웃"
           />
@@ -77,7 +84,7 @@ function Main() {
             className="main-login btn-nomal-main"
             value="회원가입"
             onClick={() => {
-              navigation("join");
+              navigation("/join");
             }}
           />
           <input
@@ -85,7 +92,8 @@ function Main() {
             className="main-login btn-nomal-main"
             value="로그인"
             onClick={() => {
-              navigation("/login");
+              // navigation("/login");
+              window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다
             }}
           />
 
