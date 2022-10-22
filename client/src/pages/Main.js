@@ -68,8 +68,19 @@ function Main() {
           <input
             type="button"
             className="main-login btn-nomal-main"
-            onClick={() => {
+            onClick={async () => {
               localStorage.removeItem("loginUser");
+
+              await window.Kakao.API.request({
+                url: '/v1/user/unlink',
+              })
+              .then(function(response) {
+                console.log(response);
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+              
               setLoginUser({
                 id: "",
                 pw: "",

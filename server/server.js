@@ -1,19 +1,41 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const http = require("http");
+
+const session = require("express-session");
+const fileStore = require("session-file-store")(session); // session file store
+
+const server = http.createServer(app);
+
 
 const request = require("request");
 const convert = require("xml-js");
 const DB = { apart: [] };
 
-app.use(cors()); //cors미들 웨이 추가 !!
+app.use(
+  session({
+    secret: "Session",
+    saveUninitialize: true,
+    store: new fileStore(), // 세션 객체에 세션스토어를 적용
+    resave: false,
+  })
+);
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.get("/", function (req, res) {
   res.send("Hello Node.js");
 });
 
-app.listen(5000, function () {
-  console.log("Start Node Server!");
+
+server.listen(5000, () => {
+  console.log("Start Server..");
 });
 
 //여기서 공공데터 포털에 요청을 한다
@@ -156,19 +178,40 @@ const kakaoDB = {
   ],
 };
 
+app.get('/autoLogin',(req,res) => {
+
+  console.log('AUTO LOGIN ================================')
+
+
+  console.log('AUTO LOGIN ================================')
+
+  res.send(req.session.loginUser);
+
+})
+
+/**
+ * req.session.destroy(function(){
+req.session;
+});
+ */
+
 app.get("/kakaoLogin", (req, res) => {
   // console.log(req.query);
   // console.log(req.query.user); //이렇게 사용하면 문자열로 사용할 수 없다.
   console.log(JSON.parse(req.query.user));
   const user = JSON.parse(req.query.user);
   kakaoDB.user.push(user);
-  console.log(kakaoDB);
 
   const result = {
     code: "success",
     message: "로그인 되었습니다.",
     user: user,
   };
+
+  req.session.loginUser = user;
+  req.session.save((error) => {
+    if (error) console.log(error);
+  });
 
   res.send(result);
 });

@@ -2,7 +2,9 @@ import "./App.css";
 import React from "react";
 import AppIndex from "./AppIndex";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
+axios.defaults.withCredentials = true;
 //로그인이라는 기능을 사용하기 위해서는 무조건 전역변수가 필요하다.(여러 페이지 에서 로그인 정보를 가지고 와야 하기때문이다.)
 //useContext : 리액트 에서의 전역 변수 사용 방법(리액트 내에 있어서 다운 X)
 //Redux, Recoil도 전역 변수를 설정해주는 라이브러리 (다운 받아야 사용 가능)
@@ -41,11 +43,29 @@ function App() {
     }
   };
 
-  const 자동로그인 = () => {
+  const 자동로그인 = async () => {
     //user에 key값을 가지고온다(문자열) -> 사용할 수 있도록 객체로 바꾸어 준다.
+    await axios({
+      url: "http://localhost:5000/autoLogin",      
+      withCredentials : true,
+    }).then((res) => {
+   
+      console.log(res);
+      
+      // const 로그인했을때비접근주소 = ["join", "login"];
+      // const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
+  
+      // //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
+      // //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
+      // if (로그인했을때비접근주소.includes(주소) && loginUser.nickname !== "") {
+      //   navigation("/");
+      // }
+    
+    })
+
     const user = JSON.parse(localStorage.getItem("loginUser"));
     if (user) {
-      console.log("--------------------");
+      console.log("APP에서 user변수");
       console.log(loginUser);
       setLoginUser(user);
     }
@@ -58,6 +78,8 @@ function App() {
   React.useEffect(() => {
     주소유효성검증();
   }, [loginUser]); //처음에는 값이 비어있기 때문에 loginUser가 변할때 리로딩을 해줘라
+
+
 
   return (
     <StoreContext.Provider

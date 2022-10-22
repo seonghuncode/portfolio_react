@@ -16,9 +16,9 @@ function 카카오데이터() {
 
   //로그인한 아이디를 전역변수로 사용하기 위한 코드
   const { loginUser, setLoginUser } = React.useContext(StoreContext);
-  console.log("test");
+  console.log("Appindex 에서 user변수");
   console.log(loginUser);
-  console.log("test");
+  
 
   //정보를 받는 곳인데 해당 url에서 코드를 가지고 올때 사용하는 코드 암기
   const code = new URL(window.location.href).searchParams.get("code");
@@ -39,6 +39,7 @@ function 카카오데이터() {
     const result = await axios({
       method: "POST",
       url: "https://kauth.kakao.com/oauth/token",
+      withCredentials : false,
       data: data,
     });
     console.log(result);
@@ -65,34 +66,34 @@ function 카카오데이터() {
 
     //console.log(kakaoData.kakao_account.profile.nickname); //추후 서버에 보낼 이름을 뽑아내는 방법
     // userInformation = kakaoData;
-    const login = async () => {
-      const nickname = kakaoData.kakao_account.profile.nickname;
-      const backgroundUrl = kakaoData.kakao_account.profile.profile_image_url;
-      const user = {
-        nickname: nickname,
-        backgroundUrl: backgroundUrl,
-      };
-      // console.log("user입니다");
-      // console.log(user);
 
-      await axios({
-        url: "http://localhost:5000/kakaoLogin",
-        params: {
-          user: user,
-        },
-      }).then(({ data }) => {
-        setLoginUser(data.user);
-        // console.log("Data입니다");
-        // console.log(data.user);
-        // console.log(loginUser);
-        //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
-        localStorage.setItem("loginUser", JSON.stringify(data.user)); //setItem("loginUser", data.user) == loginUser라는 객체에 data.user을 넣는다는 의미
-        //오로지 문자열만 넣을수 있기다 -> data.user객체를 문자열로 변환해서 넣어 준다.
-
-        navigation("/"); ///로그인 성공시 메인 화면 으로
-      });
+    const nickname = kakaoData.kakao_account.profile.nickname;
+    const backgroundUrl = kakaoData.kakao_account.profile.profile_image_url;
+    const user = {
+      nickname: nickname,
+      backgroundUrl: backgroundUrl,
     };
-    login();
+    // console.log("user입니다");
+    // console.log(user);
+
+    await axios({
+      url: "http://localhost:5000/kakaoLogin",
+      withCredentials : true,
+      params: {
+        user: user,
+      },
+    }).then(({ data }) => {
+      setLoginUser(data.user);
+      // console.log("Data입니다");
+      // console.log(data.user);
+      // console.log(loginUser);
+      //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
+      localStorage.setItem("loginUser", JSON.stringify(data.user)); //setItem("loginUser", data.user) == loginUser라는 객체에 data.user을 넣는다는 의미
+      //오로지 문자열만 넣을수 있기다 -> data.user객체를 문자열로 변환해서 넣어 준다.
+
+      navigation("/"); ///로그인 성공시 메인 화면 으로
+    });
+ 
     //-----------------------------------------------------------------------------------------------------------------------------------------------
   };
 
