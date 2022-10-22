@@ -8,7 +8,6 @@ const fileStore = require("session-file-store")(session); // session file store
 
 const server = http.createServer(app);
 
-
 const request = require("request");
 const convert = require("xml-js");
 const DB = { apart: [] };
@@ -33,14 +32,13 @@ app.get("/", function (req, res) {
   res.send("Hello Node.js");
 });
 
-
 server.listen(5000, () => {
   console.log("Start Server..");
 });
 
-app.get('/apartAPI2', (req,res)=> {
-  res.send('?')
-})
+app.get("/apartAPI2", (req, res) => {
+  res.send("?");
+});
 
 //여기서 공공데터 포털에 요청을 한다
 app.get("/apartAPI", async function (req, res) {
@@ -72,21 +70,21 @@ app.get("/apartAPI", async function (req, res) {
         const apiData = JSON.parse(xmlToJson);
         const apartData = apiData.response.body.items.item;
         const result = [];
-  
-        console.log(body)
+
+        console.log(body);
         //데이터가 들어 있으면
         if (apartData.length > 0) {
           apartData.forEach((obj) => {
             // console.log(obj);
             let resultObject = {};
-            
+
             for (let key in obj) {
               //객체 안에 반복문을 돌리는 for in반복문
               const value =
                 obj[key]?._text === undefined
                   ? null
                   : obj[key]?._text.replaceAll(" ", ""); //공백을 없애는 기능
-  
+
               resultObject[key] = value;
             }
             result.push(resultObject);
@@ -99,14 +97,9 @@ app.get("/apartAPI", async function (req, res) {
         res.send(DB.apart);
       }
     );
-
-  } catch(e) {
-    
+  } catch (e) {
     console.log(e);
-
   }
-
-  
 });
 
 // //user에 관련된 코드---------------------------------------------
@@ -183,26 +176,41 @@ app.get("/apartAPI", async function (req, res) {
 //   console.log(req.query);
 // });
 
+//------------------------------------------------------------------------------------------------------------------userDB
 //카카카오 기능으로 로그인 할 경우 로그인 정보를 저장해 주는 정보--------------------------------------
-const kakaoDB = {
+// const kakaoDB = {
+//   user: [
+//     {
+//       nickname: "관리자",
+//       backgroundUrl: "관리자",
+//     },
+//   ],
+// };
+
+const UserDB = {
   user: [
+    {
+      name: "테스트 name",
+      email: "test@naver.com",
+      password: "123",
+    },
     {
       nickname: "관리자",
       backgroundUrl: "관리자",
     },
   ],
 };
+//------------------------------------------------------------------------------------------------------------------userDB
 
-app.get('/autoLogin',(req,res) => {
+//---------------------------------------------------------------------------------------------------------------카카오 로그인
 
-  console.log('AUTO LOGIN ================================')
+app.get("/autoLogin", (req, res) => {
+  console.log("AUTO LOGIN ================================");
 
-
-  console.log('AUTO LOGIN ================================')
+  console.log("AUTO LOGIN ================================");
 
   res.send(req.session.loginUser);
-
-})
+});
 
 /**
  * req.session.destroy(function(){
@@ -213,9 +221,11 @@ req.session;
 app.get("/kakaoLogin", (req, res) => {
   // console.log(req.query);
   // console.log(req.query.user); //이렇게 사용하면 문자열로 사용할 수 없다.
+  console.log("클라이언트 에서 넘어온  user정보 입니다");
   console.log(JSON.parse(req.query.user));
   const user = JSON.parse(req.query.user);
-  kakaoDB.user.push(user);
+  // kakaoDB.user.push(user);--------------------------------------------------------------------------------
+  UserDB.user.push(user);
 
   const result = {
     code: "success",
@@ -230,3 +240,128 @@ app.get("/kakaoLogin", (req, res) => {
 
   res.send(result);
 });
+//---------------------------------------------------------------------------------------------------------------카카오 로그인
+
+//회원 가입을 진행하는 서버----------------------------------------------------------------------------------------------------
+app.get("/join", (req, res) => {
+  console.log("회원가입 서버 입니다");
+  console.log(JSON.parse(req.query.user));
+
+  const user = JSON.parse(req.query.user);
+
+  const name = user.name;
+  const email = user.email;
+  const password1 = user.password1;
+  const password2 = user.password2;
+
+  const result = {
+    code: "success",
+    message: "회원가입이 왼료 되었습니다.",
+    user: null,
+  };
+
+  const 유효성배열 = [1];
+  for (let key in 유효성배열) {
+    if (name === "") {
+      result.code = "fail";
+      result.message = "name을 입력해 주세요";
+      break;
+    }
+
+    if (email === "") {
+      result.code = "fail";
+      result.message = "email을 입력해 주세요";
+      break;
+    }
+
+    if (password1 === "") {
+      result.code = "fail";
+      result.message = "passord1를 입력해 주세요";
+      break;
+    }
+
+    if (password2 === "") {
+      result.code = "fail";
+      result.message = "passord2를 입력해 주세요";
+      break;
+    }
+
+    if (password1 !== password2) {
+      result.code = "fail";
+      result.message = "입력한 비밀번호 두개가 일치하지 않습니다.";
+      break;
+    }
+
+    const checkExistEmail = UserDB.user.findIndex((item) => {
+      return item.email === email;
+    });
+    console.log("checkExistEmail");
+    console.log(checkExistEmail);
+    if (checkExistEmail !== -1) {
+      //존재 하는 값이 없을 경우 -1이 나온다
+      result.code = "fail";
+      result.message = "해당 email은 이미 존재하는 email입니다.";
+      break;
+    }
+  }
+
+  UserDB.user.push(user);
+  result.user = user;
+  res.send(result);
+  console.log("저장이 되었는지 확인 하기");
+  console.log(UserDB);
+});
+
+//회원 가입을 진행하는 서버----------------------------------------------------------------------------------------------------
+
+//일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------
+app.get("/login", (req, res) => {
+  console.log(req.query);
+  console.log(JSON.parse(req.query.user));
+
+  const userInfo = JSON.parse(req.query.user);
+  const email = userInfo.email;
+  const password = userInfo.password;
+  // console.log(email);
+  // console.log(password);
+
+  const result = {
+    code: "success",
+    message: "로그인 성공 했습니다.",
+    user: null,
+  };
+
+  const 유효성배열 = [1];
+  for (let key in 유효성배열) {
+    //객체안 키값으로 반복문
+    if (email === "") {
+      result.code = "fail";
+      result.message = "email을 입력해 주세요";
+      break;
+    }
+
+    if (password === "") {
+      result.code = "fail";
+      result.message = "password를 입력해 주세요";
+      break;
+    }
+
+    const findUser = UserDB.user.find((item) => {
+      return item.email === email && item.password === password;
+    });
+    console.log("=============findUser====================");
+    console.log(findUser);
+
+    if (findUser === undefined) {
+      result.code = "fail";
+      result.message =
+        "존재하지 않는 email 또는 password 입니다. 확인해 주세요";
+      break;
+    }
+    result.user = findUser;
+    console.log(findUser);
+  }
+
+  res.send(result);
+});
+//일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------
