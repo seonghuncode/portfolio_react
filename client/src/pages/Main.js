@@ -22,11 +22,11 @@ function Main() {
   const apartAPI = async () => {
     await axios({
       url: "http://localhost:5000/apartAPI",
+      withCredentials: false, //세션을 위해 로그인 할때 불러올때만 true이고 나머지는 false로 해준다
     })
       .then((response) => {
         // 랜덤값 5개를 뽑는 알고리즘
 
-        console.log(response.data);
         const a = getRandom(response.data.length - 5); //시작값
         const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
         for (var i = a; i <= b; i++) {
@@ -72,15 +72,15 @@ function Main() {
               localStorage.removeItem("loginUser");
 
               await window.Kakao.API.request({
-                url: '/v1/user/unlink',
+                url: "/v1/user/unlink",
               })
-              .then(function(response) {
-                console.log(response);
-              })
-              .catch(function(error) {
-                console.log(error);
-              });
-              
+                .then(function (response) {
+                  console.log(response);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
               setLoginUser({
                 id: "",
                 pw: "",
@@ -103,8 +103,9 @@ function Main() {
             className="main-login btn-nomal-main"
             value="로그인"
             onClick={() => {
-              // navigation("/login");
-              window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다
+              //로그인 하면 페이지에서 어떠한 로그인으로 할건지 선택하는 방법 부터 하기
+              navigation("/login");
+              //window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다
             }}
           />
 

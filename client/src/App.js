@@ -15,12 +15,6 @@ export const StoreContext = React.createContext({}); // storeContext는 전역 �
 function App() {
   //새로고침 하면 state값은 사라진다 -> 웹에서 기억하도록 해야 한다.
   //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
-  // const [loginUser, setLoginUser] = React.useState({
-  //   id: "",
-  //   pw: "",
-  //   //받을 정보를 원하는 만큼 넣어준다. -> 이 유저 정보를 AppIndex로 보내주어야 한다
-  //   //==> 전역변수 사용
-  // });
   const [loginUser, setLoginUser] = React.useState({
     nickname: "",
     backgroundUrl: "",
@@ -48,20 +42,21 @@ function App() {
     await axios({
       url: "http://localhost:5000/autoLogin",      
       withCredentials : true,
-    }).then((res) => {
-   
-      console.log(res);
+    }).then(({data}) => {
       
-      // const 로그인했을때비접근주소 = ["join", "login"];
-      // const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
+      const 로그인했을때비접근주소 = ["join", "login"];
+      const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
   
-      // //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
-      // //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
-      // if (로그인했을때비접근주소.includes(주소) && loginUser.nickname !== "") {
-      //   navigation("/");
-      // }
+      //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
+      //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
+    if (로그인했을때비접근주소.includes(주소) && data.nickname !== "") {
+        console.log("data.nickname")      
+        console.log(data.nickname)
+        navigation("/");
+      }
     
     })
+  
 
     const user = JSON.parse(localStorage.getItem("loginUser"));
     if (user) {

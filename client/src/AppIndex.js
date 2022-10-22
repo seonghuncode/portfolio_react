@@ -110,7 +110,7 @@ function AppIndex() {
     <Routes>
       <Route exact path="/" element={<Main />} />
       <Route exact path="join" element={<Join />} />
-      {/* <Route exaxt path="/login" element={<Login />} />  초기 로그인 코드*/}
+      <Route exaxt path="/login" element={<Login />} />  초기 로그인 코드
       <Route exaxt path="/oauth/callback/kakao" element={<카카오데이터 />} />
     </Routes>
   );
