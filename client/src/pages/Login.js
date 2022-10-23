@@ -85,11 +85,14 @@ function Join() {
               }
 
               if (data.code === "success") {
-                setLoginUser(data.user.name);
                 console.log("=============================================");
+                console.log(data);
+                console.log(data.user.name);
+                setLoginUser(data.user.name);
+                console.log("loginUser - login페이지");
                 console.log(loginUser);
                 console.log("=============================================");
-                localStorage.setItem("loginUser", JSON.stringify(data.user));
+                // localStorage.setItem("loginUser", JSON.stringify(data.user));
                 alert(data.user.name + "님 환영합니다.");
                 navigation("/");
               }

@@ -37,26 +37,27 @@ function App() {
     }
   };
 
+  //새로고침 할때 마다 서버 세션에 접근하여 세션 값을 가지고 오는 코드
   const 자동로그인 = async () => {
     //user에 key값을 가지고온다(문자열) -> 사용할 수 있도록 객체로 바꾸어 준다.
     await axios({
-      url: "http://localhost:5000/autoLogin",      
-      withCredentials : true,
-    }).then(({data}) => {
-      
+      url: "http://localhost:5000/autoLogin",
+      withCredentials: true,
+    }).then(({ data }) => {
       const 로그인했을때비접근주소 = ["join", "login"];
       const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
-  
+
+      console.log("data.nickname");
+      console.log(data.nickname);
+      console.log(data);
       //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
       //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
-    if (로그인했을때비접근주소.includes(주소) && data.nickname !== "") {
-        console.log("data.nickname")      
-        console.log(data.nickname)
+      if (로그인했을때비접근주소.includes(주소) && data.nickname !== "") {
+        console.log("data.nickname");
+        console.log(data.nickname);
         navigation("/");
       }
-    
-    })
-  
+    });
 
     const user = JSON.parse(localStorage.getItem("loginUser"));
     if (user) {
@@ -73,8 +74,6 @@ function App() {
   React.useEffect(() => {
     주소유효성검증();
   }, [loginUser]); //처음에는 값이 비어있기 때문에 loginUser가 변할때 리로딩을 해줘라
-
-
 
   return (
     <StoreContext.Provider

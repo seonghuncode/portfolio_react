@@ -191,6 +191,11 @@ const UserDB = {
   user: [
     {
       name: "테스트 name",
+      email: "test2@naver.com",
+      password: "123",
+    },
+    {
+      name: "관리자",
       email: "test@naver.com",
       password: "123",
     },
@@ -202,14 +207,14 @@ const UserDB = {
 };
 //------------------------------------------------------------------------------------------------------------------userDB
 
-//---------------------------------------------------------------------------------------------------------------카카오 로그인
+//---------------------------------------------------------------------------------------------------------------자동 로그인
 
 app.get("/autoLogin", (req, res) => {
   console.log("AUTO LOGIN ================================");
-
+  console.log(req.session);
   console.log("AUTO LOGIN ================================");
 
-  res.send(req.session.loginUser);
+  res.send("");
 });
 
 /**
@@ -217,14 +222,16 @@ app.get("/autoLogin", (req, res) => {
 req.session;
 });
  */
+//---------------------------------------------------------------------------------------------------------------자동 로그인
 
+//---------------------------------------------------------------------------------------------------------------카카오 로그인
 app.get("/kakaoLogin", (req, res) => {
   // console.log(req.query);
   // console.log(req.query.user); //이렇게 사용하면 문자열로 사용할 수 없다.
   console.log("클라이언트 에서 넘어온  user정보 입니다");
   console.log(JSON.parse(req.query.user));
   const user = JSON.parse(req.query.user);
-  // kakaoDB.user.push(user);--------------------------------------------------------------------------------
+
   UserDB.user.push(user);
 
   const result = {
@@ -232,7 +239,6 @@ app.get("/kakaoLogin", (req, res) => {
     message: "로그인 되었습니다.",
     user: user,
   };
-
   req.session.loginUser = user;
   req.session.save((error) => {
     if (error) console.log(error);
@@ -361,7 +367,11 @@ app.get("/login", (req, res) => {
     result.user = findUser;
     console.log(findUser);
   }
-
+  //로그인이 최종적으로 되면 세션을 넣어 주어야 한다
+  req.session.loginUser = userInfo;
+  req.session.save((error) => {
+    if (error) console.log(error);
+  });
   res.send(result);
 });
 //일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------

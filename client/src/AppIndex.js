@@ -18,7 +18,6 @@ function 카카오데이터() {
   const { loginUser, setLoginUser } = React.useContext(StoreContext);
   console.log("Appindex 에서 user변수");
   console.log(loginUser);
-  
 
   //정보를 받는 곳인데 해당 url에서 코드를 가지고 올때 사용하는 코드 암기
   const code = new URL(window.location.href).searchParams.get("code");
@@ -39,7 +38,7 @@ function 카카오데이터() {
     const result = await axios({
       method: "POST",
       url: "https://kauth.kakao.com/oauth/token",
-      withCredentials : false,
+      withCredentials: false,
       data: data,
     });
     console.log(result);
@@ -78,7 +77,7 @@ function 카카오데이터() {
 
     await axios({
       url: "http://localhost:5000/kakaoLogin",
-      withCredentials : true,
+      withCredentials: true,
       params: {
         user: user,
       },
@@ -88,12 +87,12 @@ function 카카오데이터() {
       // console.log(data.user);
       // console.log(loginUser);
       //웹에서 로그인 정보를 기억 하는 방법은  (localStorage -> (영구적이다.) , Cookie -> (만료 날짜가 있다)가 있다)
-      localStorage.setItem("loginUser", JSON.stringify(data.user)); //setItem("loginUser", data.user) == loginUser라는 객체에 data.user을 넣는다는 의미
+      // localStorage.setItem("loginUser", JSON.stringify(data.user)); //setItem("loginUser", data.user) == loginUser라는 객체에 data.user을 넣는다는 의미 ==> 세션으로 대체
       //오로지 문자열만 넣을수 있기다 -> data.user객체를 문자열로 변환해서 넣어 준다.
 
       navigation("/"); ///로그인 성공시 메인 화면 으로
     });
- 
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------
   };
 
@@ -110,7 +109,7 @@ function AppIndex() {
     <Routes>
       <Route exact path="/" element={<Main />} />
       <Route exact path="join" element={<Join />} />
-      <Route exaxt path="/login" element={<Login />} />  초기 로그인 코드
+      <Route exaxt path="/login" element={<Login />} /> 초기 로그인 코드
       <Route exaxt path="/oauth/callback/kakao" element={<카카오데이터 />} />
     </Routes>
   );

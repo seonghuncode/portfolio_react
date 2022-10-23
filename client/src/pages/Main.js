@@ -57,7 +57,7 @@ function Main() {
 
   return (
     <div>
-      안녕하세요 {loginUser.nickname}님 !{""}
+      안녕하세요 {loginUser.nickname} {loginUser.name} 님 !{""}
       <div className="mainFrame">
         <div className="nav-main">
           <input
