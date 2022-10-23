@@ -29,6 +29,8 @@ app.use(
 
 //mysql연결
 const mysql = require("mysql2");
+const { query } = require("express");
+const { initParams } = require("request");
 const DB2 = mysql.createPoolCluster();
 DB2.add("user", {
   //데이터베이스 이름 + 객체
@@ -48,15 +50,29 @@ app.get("/user", async (req, res) => {
   //외부에서 가지고 오는 것은 대부분은 비동기 이다
   //비동기 = promisr 객체, (DB2.getConnection은 비동기라 /user로 오면 나머지가 다 실행되고 맨 마지막에 실행 된다)
   //promise객체를 우리가 사용하도록 바꾸기 위해서는
+
+  const data = await 디비실행({
+    database: "user",
+    query: "SELECT * FROM user",
+  });
+
+  res.send(data);
+});
+
+//간단하게 함수화 하기
+async function 디비실행() {
+  //데이터 베이스, 쿼리를 받아 사용
+  const { database, query } = params;
+
   const data = await new Promise((resoleve) => {
     // //promise객체를 우리가 사용하도록 바꾸기 위해서는 : 이 객체를 사용비동기 -> 동기
-    DB2.getConnection("user", (error, connection) => {
+    DB2.getConnection(database, (error, connection) => {
       // 해당 함수가 user데이터 베이스와 연결을 하겠다
       if (error) {
         console.log("데이터 베이스 연결 오류 ===>", error);
         return;
       } // 오류 나면 종료
-      connection.query("SELECT * FROM user", (err9or, data) => {
+      connection.query(query, (err9or, data) => {
         //query == sql문법
         if (error) {
           console.log("쿼리 오류 ==> ", error);
@@ -67,9 +83,7 @@ app.get("/user", async (req, res) => {
     });
   });
   console.log(data);
-
-  res.send(data);
-});
+}
 //mysql 가져오기
 
 const DB = { apart: [] };
