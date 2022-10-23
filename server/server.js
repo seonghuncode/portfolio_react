@@ -27,7 +27,7 @@ app.use(
   })
 );
 
-//mysql연결
+//mysql연결====================================================
 const mysql = require("mysql2");
 const { query } = require("express");
 const { initParams } = require("request");
@@ -41,9 +41,9 @@ DB2.add("user", {
   port: 3306,
 });
 
-//mysql연결
+//mysql연결=====================================================
 
-//mysql 가져오기
+//mysql 가져오기==============================================================================================
 app.get("/user", async (req, res) => {
   //async쓰면 안에서  await사용 가능(await사용하려면 최상의 부모한태 async)
 
@@ -84,7 +84,7 @@ async function 디비실행() {
   });
   console.log(data);
 }
-//mysql 가져오기
+//mysql 가져오기============================================================================================
 
 const DB = { apart: [] };
 
@@ -151,7 +151,9 @@ app.get("/apartAPI", async function (req, res) {
           });
         }
         // console.log(result);
+        console.log("==================================================");
         console.log(DB.apart);
+        console.log(result);
         DB.apart = result;
         // res.send(result);
         res.send(DB.apart);
