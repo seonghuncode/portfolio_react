@@ -10,7 +10,6 @@ const server = http.createServer(app);
 
 const request = require("request");
 const convert = require("xml-js");
-const DB = { apart: [] };
 
 app.use(
   session({
@@ -27,6 +26,53 @@ app.use(
     credentials: true,
   })
 );
+
+//mysql연결
+const mysql = require("mysql2");
+const DB2 = mysql.createPoolCluster();
+DB2.add("user", {
+  //데이터베이스 이름 + 객체
+  host: `127.0.0.1`, // == localhost
+  user: "root",
+  password: "",
+  database: "user", //sql에서 만든 데이터 베이스 이름
+  port: 3306,
+});
+
+//mysql연결
+
+//mysql 가져오기
+app.get("/user", async (req, res) => {
+  //async쓰면 안에서  await사용 가능(await사용하려면 최상의 부모한태 async)
+
+  //외부에서 가지고 오는 것은 대부분은 비동기 이다
+  //비동기 = promisr 객체, (DB2.getConnection은 비동기라 /user로 오면 나머지가 다 실행되고 맨 마지막에 실행 된다)
+  //promise객체를 우리가 사용하도록 바꾸기 위해서는
+  const data = await new Promise((resoleve) => {
+    // //promise객체를 우리가 사용하도록 바꾸기 위해서는 : 이 객체를 사용비동기 -> 동기
+    DB2.getConnection("user", (error, connection) => {
+      // 해당 함수가 user데이터 베이스와 연결을 하겠다
+      if (error) {
+        console.log("데이터 베이스 연결 오류 ===>", error);
+        return;
+      } // 오류 나면 종료
+      connection.query("SELECT * FROM user", (err9or, data) => {
+        //query == sql문법
+        if (error) {
+          console.log("쿼리 오류 ==> ", error);
+          return;
+        }
+        resoleve(data); //resolve로 받아 넘겨주어 사용한다고 생각
+      });
+    });
+  });
+  console.log(data);
+
+  res.send(data);
+});
+//mysql 가져오기
+
+const DB = { apart: [] };
 
 app.get("/", function (req, res) {
   res.send("Hello Node.js");

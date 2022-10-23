@@ -7,6 +7,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../App";
 
+//-------------------------------------------------
+function Test() {
+  //컴포넌트 함수는 무조건 대문자
+  const 유저정보가지고오기 = async () => {
+    await axios({
+      url: "http://localhost:5000/user",
+    }).then((res) => {
+      console.log(res);
+    });
+  };
+  return (
+    <div style={{ padding: "100" }}>
+      <button onClick={유저정보가지고오기}>유저정보가지고오기</button>
+    </div>
+  );
+}
+//-------------------------------------------------
+
 function Main() {
   const navigation = useNavigate();
   const [apartData, setapartData] = React.useState();
@@ -58,6 +76,8 @@ function Main() {
   return (
     <div>
       안녕하세요 {loginUser.nickname} {loginUser.name} 님 !{""}
+      <Test />
+      {/* 컴포넌트함수 실행 */}
       <div className="mainFrame">
         <div className="nav-main">
           <input
@@ -103,7 +123,6 @@ function Main() {
             className="main-login btn-nomal-main"
             value="로그인"
             onClick={() => {
-              //로그인 하면 페이지에서 어떠한 로그인으로 할건지 선택하는 방법 부터 하기
               navigation("/login");
               //window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다
             }}
@@ -122,7 +141,6 @@ function Main() {
             value="지도"
           />
         </div>
-
         <div className="center-main">
           <div className="mainQuestion">어떤 아파트를 찾으세요?</div>
           <div className="btn-area">
