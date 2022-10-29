@@ -39,6 +39,13 @@ DB2.add("project_apart", {
   password: "",
   database: "project_apart", //sql에서 만든 데이터 베이스 이름
   port: 3306,
+  //
+  //개인 노트북 sql??
+  // host: `127.0.0.1`, // == localhost
+  // user: "ysh",
+  // password: "ysh123",
+  // database: "project_apart", //sql에서 만든 데이터 베이스 이름
+  // port: 3306,
 });
 
 //mysql연결=====================================================
@@ -64,7 +71,7 @@ async function 디비실행(params) {
   //데이터 베이스, 쿼리를 받아 사용
   const { database, query } = params;
 
-  const data = await new Promise((resoleve, reject) => {
+  const data = await new Promise((resolve, reject) => {
     // //promise객체를 우리가 사용하도록 바꾸기 위해서는 : 이 객체를 사용비동기 -> 동기
     DB2.getConnection(database, (error, connection) => {
       // 해당 함수가 user데이터 베이스와 연결을 하겠다
@@ -81,7 +88,7 @@ async function 디비실행(params) {
           reject(error);
         }
 
-        resoleve(data); //resolve로 받아 넘겨주어 사용한다고 생각
+        resolve(data); //resolve로 받아 넘겨주어 사용한다고 생각
       });
     });
   });
@@ -182,22 +189,18 @@ app.get("/TestapartAPI", async function (req, res) {
 
         console.log("mariaDB에 넣기 위한 코드===========================");
         console.log("result값");
-        // console.log(result);
-        /**
-         * result 배열
-         */
-
-        // result.forEach((item) => {
-
-        //   INSERT INTO ('') VALUES ('')
-
-        // })
+        console.log(result);
 
         console.log(result.length);
 
         let cnt = 0;
 
-        for await (let item of result) {
+        // for await (let item of result) {
+        //   const 쿼리 = 인서트만들기({
+        //     table: "apart",
+        //     data: item,
+        //   });
+        for (let item of result) {
           const 쿼리 = 인서트만들기({
             table: "apart",
             data: item,
@@ -205,6 +208,10 @@ app.get("/TestapartAPI", async function (req, res) {
 
           console.log("실행중 ========>", cnt);
 
+          // await 디비실행({
+          //   database: "project_apart",
+          //   query: 쿼리,
+          // });
           await 디비실행({
             database: "project_apart",
             query: 쿼리,
@@ -214,7 +221,7 @@ app.get("/TestapartAPI", async function (req, res) {
         }
 
         console.log("끝남");
-
+        res.send(result);
         // result.forEach(async (item, index) => {
         //   const 쿼리 = 인서트만들기({
         //     table: "apart",
@@ -236,8 +243,6 @@ app.get("/TestapartAPI", async function (req, res) {
   } catch (e) {
     console.log(e);
   }
-
-  res.send("");
 
   //--------------------------------------insert 쿼리 만들기
 
