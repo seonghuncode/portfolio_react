@@ -10,11 +10,11 @@
 #테이블 생성 방법 -> 테이블 생성 -> 테이블이름, 엔진(inooDB),문자인코딩(utf8),콜레이션(utf8_general_ci)
 #-> 테이블 만들기
 
-DROP DATABASE IF EXISTS `user`;
-CREATE DATABASE `user`;
-USE `user`;
+DROP DATABASE IF EXISTS project_apart;
+CREATE DATABASE project_apart;
+USE project_apart;
 
-
+#유저 테이블
 CREATE TABLE `user`(
   id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name`CHAR(50),
@@ -37,8 +37,7 @@ email = "test@naver.com",
 
 
 INSERT INTO `user`
-SET 
-nickname = "kakauser",
+SET nickname = "kakauser",
 `password` = "123",
 `type` = 2;
 
@@ -46,5 +45,39 @@ nickname = "kakauser",
 SELECT * FROM `user`;
 
 
+
+#부동산 API테이블
+CREATE TABLE apart(
+id INT(50) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+trading_price VARCHAR(50) NOT NULL,
+trading_type VARCHAR(10),
+year_of_constuction VARCHAR(20) NOT NULL,
+`year` VARCHAR(20) NOT NULL,
+raod_name VARCHAR(30) NOT NULL,
+road_name_main_code VARCHAR(30) NOT NULL,
+road_name_unmain_code VARCHAR(30) NOT NULL,
+road_name_city_code VARCHAR(30) NOT NULL,
+road_name_serial_number VARCHAR(30) NOT NULL,
+road_name_ground_underground_code VARCHAR(30) NOT NULL,
+road_name_code VARCHAR(20) NOT NULL,
+court_building VARCHAR(20) NOT NULL,
+court_building_main_code VARCHAR(30) NOT NULL,
+court_building_unmain_code VARCHAR(30) NOT NULL,
+court_building_city_code VARCHAR(30) NOT NULL,
+court_building_town_code VARCHAR(30) NOT NULL,
+court_building_code VARCHAR(20) NOT NULL,
+apart_name VARCHAR(20) NOT NULL,
+mondth VARCHAR(20) NOT NULL,
+`day` VARCHAR(20) NOT NULL,
+serial_number VARCHAR(20) NOT NULL,
+dedicated_area VARCHAR(20) NOT NULL,
+broker VARCHAR(10),
+`number` VARCHAR(10) NOT NULL,
+`floor` VARCHAR(10) NOT NULL,
+clear_reason VARCHAR(10),
+clear VARCHAR(10)
+)
+
+SELECT * FROM apart;
 
 

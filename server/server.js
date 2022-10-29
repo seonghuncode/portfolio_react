@@ -32,12 +32,12 @@ const mysql = require("mysql2");
 const { query } = require("express");
 const { initParams } = require("request");
 const DB2 = mysql.createPoolCluster();
-DB2.add("user", {
+DB2.add("project_apart", {
   //데이터베이스 이름 + 객체
   host: `127.0.0.1`, // == localhost
   user: "root",
   password: "",
-  database: "user", //sql에서 만든 데이터 베이스 이름
+  database: "project_apart", //sql에서 만든 데이터 베이스 이름
   port: 3306,
 });
 
@@ -52,7 +52,7 @@ app.get("/user", async (req, res) => {
   //promise객체를 우리가 사용하도록 바꾸기 위해서는
 
   const data = await 디비실행({
-    database: "user",
+    database: "project_apart",
     query: "SELECT * FROM user",
   });
 
@@ -60,31 +60,191 @@ app.get("/user", async (req, res) => {
 });
 
 //간단하게 함수화 하기
-async function 디비실행() {
+async function 디비실행(params) {
   //데이터 베이스, 쿼리를 받아 사용
   const { database, query } = params;
 
-  const data = await new Promise((resoleve) => {
+  const data = await new Promise((resoleve, reject) => {
     // //promise객체를 우리가 사용하도록 바꾸기 위해서는 : 이 객체를 사용비동기 -> 동기
     DB2.getConnection(database, (error, connection) => {
       // 해당 함수가 user데이터 베이스와 연결을 하겠다
       if (error) {
         console.log("데이터 베이스 연결 오류 ===>", error);
-        return;
+
+        reject(error);
       } // 오류 나면 종료
-      connection.query(query, (err9or, data) => {
+      connection.query(query, (error, data) => {
         //query == sql문법
         if (error) {
           console.log("쿼리 오류 ==> ", error);
-          return;
+
+          reject(error);
         }
+
         resoleve(data); //resolve로 받아 넘겨주어 사용한다고 생각
       });
     });
   });
-  console.log(data);
+  return data;
 }
 //mysql 가져오기============================================================================================
+
+//----------------------------------------------------------------------------------apart api mariaDB에 저장하기
+
+//---------------------mariaDb에 넣기 위해 sql문 컬럼명으로 1대1 매칭 시켜준다
+const a = {
+  거래금액: "trading_price",
+  거래유형: "trading_type",
+  건축년도: "year_of_constuction",
+  년: "year",
+  도로명: "raod_name",
+  도로명건물본번호코드: "road_name_main_code",
+  도로명건물부번호코드: "road_name_unmain_code",
+  도로명시군구코드: "road_name_city_code",
+  도로명일련번호코드: "road_name_serial_number",
+  도로명지상지하코드: "road_name_ground_underground_code",
+  도로명코드: "road_name_code",
+  법정동: "court_building",
+  법정동본번코드: "court_building_main_code",
+  법정동부번코드: "court_building_unmain_code",
+  법정동시군구코드: "court_building_city_code",
+  법정동읍면동코드: "court_building_town_code",
+  법정동지번코드: "court_building_code",
+  아파트: "apart_name",
+  월: "month",
+  일: "day",
+  일련번호: "serial_number",
+  전용면적: "dedicated_area",
+  중개사소재지: "broker",
+  지번: "number",
+  지역코드: "number_code",
+  층: "floor",
+  해제사유발생일: "clear_reason",
+  해제여부: "clear",
+};
+
+function 인서트만들기(params) {
+  const { table, data } = params;
+  const 컬럼 = Object.keys(data);
+  const 값 = Object.values(data);
+
+  const 쿼리 = `INSERT INTO ${table}(${컬럼.join(",")}) VALUES('${값.join(
+    "','"
+  )}')`;
+
+  return 쿼리;
+}
+
+app.get("/TestapartAPI", async function (req, res) {
+  try {
+    request(
+      {
+        uri: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev", //요청 보내고 싶은 주소
+        method: "get",
+        qs: {
+          //쿼리스트링 params랑 같다고 생각
+          serviceKey:
+            "WM+MJ1skpxpAh/LF6vyhnwEyYL6jE0z2qKopFOydxC8gt8G9cJ9sQror5m99zhcElmmdgcYb/sWQ+6jNqjdGCA==",
+          numOfRows: 50,
+          LAWD_CD: 11110,
+          DEAL_YMD: 201512,
+        },
+      },
+      async function (error, response, body) {
+        //정상 동작 했을 경우 실행 되는 함수
+        const xmlToJson = convert.xml2json(body, { compact: true, spaces: 4 });
+        const apiData = JSON.parse(xmlToJson);
+        const apartData = apiData.response.body.items.item;
+        const result = [];
+
+        console.log("mariaDB에 넣기 위해 apartAPI에서 불러온 body");
+
+        //데이터가 들어 있으면
+        if (apartData.length > 0) {
+          apartData.forEach((obj) => {
+            // console.log(obj);
+            let resultObject = {};
+
+            for (let key in obj) {
+              //객체 안에 반복문을 돌리는 for in반복문
+              const value =
+                obj[key]?._text === undefined
+                  ? null
+                  : obj[key]?._text.replaceAll(" ", ""); //공백을 없애는 기능
+
+              const 키다시정의 = a[key]; //sql 컬럼에에 맞게 재정의  ex. 키다시정의 = a[거래금액] ==> trading_price
+
+              resultObject[키다시정의] = value; //resultObject[]
+            }
+            result.push(resultObject);
+          });
+        }
+
+        console.log("mariaDB에 넣기 위한 코드===========================");
+        console.log("result값");
+        // console.log(result);
+        /**
+         * result 배열
+         */
+
+        // result.forEach((item) => {
+
+        //   INSERT INTO ('') VALUES ('')
+
+        // })
+
+        console.log(result.length);
+
+        let cnt = 0;
+
+        for await (let item of result) {
+          const 쿼리 = 인서트만들기({
+            table: "apart",
+            data: item,
+          });
+
+          console.log("실행중 ========>", cnt);
+
+          await 디비실행({
+            database: "project_apart",
+            query: 쿼리,
+          });
+
+          cnt++;
+        }
+
+        console.log("끝남");
+
+        // result.forEach(async (item, index) => {
+        //   const 쿼리 = 인서트만들기({
+        //     table: "apart",
+        //     data: item,
+        //   });
+
+        //   console.log(index, 쿼리);
+
+        //   디비실행({
+        //     database: "project_apart",
+        //     query: 쿼리,
+        //   });
+        // });
+
+        // console.log(result);
+        // console.log(result);
+      }
+    );
+  } catch (e) {
+    console.log(e);
+  }
+
+  res.send("");
+
+  //--------------------------------------insert 쿼리 만들기
+
+  //--------------------------------------insert 쿼리 만들기
+});
+
+//----------------------------------------------------------------------------------apart api mariaDB에 저장하기
 
 const DB = { apart: [] };
 

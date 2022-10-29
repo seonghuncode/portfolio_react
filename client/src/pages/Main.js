@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../App";
 
-//-------------------------------------------------
+//-------------------------------------------------DB에서 user테이블 정보 불러오기
 function Test() {
   //컴포넌트 함수는 무조건 대문자
   const 유저정보가지고오기 = async () => {
@@ -59,6 +59,31 @@ function Main() {
         console.log(e);
       });
   };
+
+  //-----------------ql에 aprtAPI를 넣기 위해 test코드
+  const TestapartAPI = async () => {
+    await axios({
+      url: "http://localhost:5000/TestapartAPI",
+      withCredentials: false, //세션을 위해 로그인 할때 불러올때만 true이고 나머지는 false로 해준다
+    })
+      .then((response) => {
+        // 랜덤값 5개를 뽑는 알고리즘
+
+        const a = getRandom(response.data.length - 5); //시작값
+        const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
+        for (var i = a; i <= b; i++) {
+          console.log(response.data[i]);
+          randomValue.push(response.data[i]);
+        }
+
+        setapartData(randomValue);
+        console.log(randomValue);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  //-----------------ql에 aprtAPI를 넣기 위해 test코드
 
   React.useEffect(() => {
     apartAPI();
