@@ -77,13 +77,6 @@ function Main() {
     <div>
       안녕하세요 {loginUser.nickname} {loginUser.name} 님 !{""}
       <Test />
-      <button
-        onClick={() => {
-          TestapartAPI();
-        }}
-      >
-        서버에서 아파트 api불러 오기
-      </button>
       {/* 컴포넌트함수 실행 */}
       <div className="mainFrame">
         <div className="nav-main">
