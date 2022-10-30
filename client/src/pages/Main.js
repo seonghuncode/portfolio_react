@@ -215,7 +215,7 @@ function Main() {
                 <div key={index}>
                   <div className="recommend-frame">
                     <div>아파트 : {item.apart_name}</div>
-                    <div>거래 금액 : {item.trading_price}</div>
+                    <div>거래 금액 : {item.trading_price} (단위:만원)</div>
                     <div>건축 년도 : {item.year_of_constuction}</div>
                     <div>
                       주소 : {item.raod_name}

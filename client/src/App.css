@@ -137,11 +137,11 @@ li {
 
 .recommend-frame {
   border: 1px solid black;
-  width: 260px;
-  height: 180px;
+  width: 310px;
+  height: 200px;
   display: inline-block;
   margin: 3px;
-  padding: 15px;
+  padding: 20px;
   font-size: 20px;
 }
 
