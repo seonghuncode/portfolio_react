@@ -80,6 +80,7 @@ async function 디비실행(params) {
 
         reject(error);
       } // 오류 나면 종료
+
       connection.query(query, (error, data) => {
         //query == sql문법
         if (error) {
@@ -90,6 +91,8 @@ async function 디비실행(params) {
 
         resolve(data); //resolve로 받아 넘겨주어 사용한다고 생각
       });
+
+      connection.release(); // 연결을 중복해서 여러번 요청하면 에러 한번 요청, 반환 하는 구조
     });
   });
   return data;
@@ -195,12 +198,7 @@ app.get("/TestapartAPI", async function (req, res) {
 
         let cnt = 0;
 
-        // for await (let item of result) {
-        //   const 쿼리 = 인서트만들기({
-        //     table: "apart",
-        //     data: item,
-        //   });
-        for (let item of result) {
+        for await (let item of result) {
           const 쿼리 = 인서트만들기({
             table: "apart",
             data: item,
@@ -208,19 +206,15 @@ app.get("/TestapartAPI", async function (req, res) {
 
           console.log("실행중 ========>", cnt);
 
-          // await 디비실행({
-          //   database: "project_apart",
-          //   query: 쿼리,
-          // });
           await 디비실행({
             database: "project_apart",
             query: 쿼리,
           });
-
           cnt++;
         }
 
         console.log("끝남");
+
         res.send(result);
         // result.forEach(async (item, index) => {
         //   const 쿼리 = 인서트만들기({
