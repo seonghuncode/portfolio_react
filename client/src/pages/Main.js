@@ -36,22 +36,36 @@ function Main() {
     return parseInt(Math.random() * length);
   };
 
-  //리액트에서 api를 불러오는 방법이 아니라 server에서 불러오기
+  //리액트에서 api를 불러오는 방법이 아니라 server에서 불러오기  (DB에 값이 없을때만 수동으로 url입력해서 넣어주기)
   const apartAPI = async () => {
     await axios({
       url: "http://localhost:5000/apartAPI",
       withCredentials: false, //세션을 위해 로그인 할때 불러올때만 true이고 나머지는 false로 해준다
     })
       .then((response) => {
-        // 랜덤값 5개를 뽑는 알고리즘
+        console.log("apart API를 DB에 저장 했습니다.");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
+  //DB에서 데이터를 select해오는 기능
+  const findeDataFromDB = async () => {
+    await axios({
+      url: "http://localhost:5000/findDataFromDB",
+      withCredentials: false,
+    })
+      .then((response) => {
+        // 랜덤값 5개를 뽑는 알고리즘
+        console.log("response");
+        console.log(response);
         const a = getRandom(response.data.length - 5); //시작값
         const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
         for (var i = a; i <= b; i++) {
           console.log(response.data[i]);
           randomValue.push(response.data[i]);
         }
-
         setapartData(randomValue);
         console.log(randomValue);
       })
@@ -61,7 +75,7 @@ function Main() {
   };
 
   React.useEffect(() => {
-    apartAPI();
+    findeDataFromDB();
   }, []); //빈 배열을 넣어 주어야 한번만 실행 된다.(없으면 랜더링 될때마다 실행)
 
   //로그인 괸련 변수 선언
@@ -177,7 +191,7 @@ function Main() {
                 border: "none",
               }}
               onClick={() => {
-                apartAPI();
+                findeDataFromDB();
               }}
             >
               {/* 버튼을 누르면 추천 매물 리로딩 */}
