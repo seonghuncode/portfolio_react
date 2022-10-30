@@ -131,6 +131,7 @@ const a = {
   층: "floor",
   해제사유발생일: "clear_reason",
   해제여부: "clear",
+  커스텀지역: "location",
 };
 
 function 인서트만들기(params) {
@@ -145,80 +146,134 @@ function 인서트만들기(params) {
   return 쿼리;
 }
 
+/**
+ *
+ * // 년도 2022년10월 계약건 ==> (DEAL_YMD) :  202210  => 2022 1월 ~ 12월
+ * // 지역코드 (LAWD_CD)
+ * -대전 서구 - 30170
+ * -대전 동구 - 30110
+ * -대전 중구 - 30140
+ * -대전 대덕구 - 30230
+ * -대전 유성구 - 30200
+ */
+
 app.get("/apartAPI", async function (req, res) {
+  const location = [
+    {
+      code: 30170,
+      name: "대전서구",
+    },
+    {
+      code: 30110,
+      name: "대전동구",
+    },
+    {
+      code: 30140,
+      name: "대전중구",
+    },
+    {
+      code: 30230,
+      name: "대전대덕구",
+    },
+    {
+      code: 30200,
+      name: "대전유성구",
+    },
+  ];
+
   try {
-    request(
-      {
-        uri: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev", //요청 보내고 싶은 주소
-        method: "get",
-        qs: {
-          //쿼리스트링 params랑 같다고 생각
-          serviceKey:
-            "WM+MJ1skpxpAh/LF6vyhnwEyYL6jE0z2qKopFOydxC8gt8G9cJ9sQror5m99zhcElmmdgcYb/sWQ+6jNqjdGCA==",
-          numOfRows: 50,
-          LAWD_CD: 11110,
-          DEAL_YMD: 201512,
-        },
-      },
-      async function (error, response, body) {
-        //정상 동작 했을 경우 실행 되는 함수
-        const xmlToJson = convert.xml2json(body, { compact: true, spaces: 4 });
-        const apiData = JSON.parse(xmlToJson);
-        const apartData = apiData.response.body.items.item;
-        const result = [];
+    for (let i = 0; i < location.length; i++) {
+      for (let date = 1; date <= 12; date++) {
+        if (date < 10) {
+          date = `0${date}`;
+        }
+        console.log("월 ==> " + date);
 
-        console.log("mariaDB에 넣기 위해 apartAPI에서 불러온 body");
+        for (let page = 1; page < 5; page++) {
+          // 2022 1월부터 10월
 
-        //데이터가 들어 있으면
-        if (apartData.length > 0) {
-          apartData.forEach((obj) => {
-            // console.log(obj);
-            let resultObject = {};
+          request(
+            {
+              uri: "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev", //요청 보내고 싶은 주소
+              method: "get",
+              qs: {
+                //쿼리스트링 params랑 같다고 생각
+                serviceKey:
+                  "WM+MJ1skpxpAh/LF6vyhnwEyYL6jE0z2qKopFOydxC8gt8G9cJ9sQror5m99zhcElmmdgcYb/sWQ+6jNqjdGCA==",
+                numOfRows: 50, //한 페이지당 데이터 갯수
+                pageNo: page, //페이지
+                LAWD_CD: location[i].code, //지역코드, 법정동코드목록조회홈코드검색코드검색
+                DEAL_YMD: `2022${date}`, //계약월
+              },
+            },
+            async function (error, response, body) {
+              //정상 동작 했을 경우 실행 되는 함수
+              const xmlToJson = convert.xml2json(body, {
+                compact: true,
+                spaces: 4,
+              });
+              const apiData = JSON.parse(xmlToJson);
+              const apartData = apiData.response.body.items.item;
+              const result = [];
 
-            for (let key in obj) {
-              //객체 안에 반복문을 돌리는 for in반복문
-              const value =
-                obj[key]?._text === undefined
-                  ? null
-                  : obj[key]?._text.replaceAll(" ", ""); //공백을 없애는 기능
+              console.log("아파트 데이터 길이", apartData?.length || 0); //길이가 없으면 0으로 표시
 
-              const 키다시정의 = a[key]; //sql 컬럼에에 맞게 재정의  ex. 키다시정의 = a[거래금액] ==> trading_price
+              const 길이 = apartData?.length || 0;
 
-              resultObject[키다시정의] = value; //resultObject[]
+              if (길이 <= 0) {
+                // console.log(`없음 ===> ${}`);
+
+                return;
+              }
+
+              const 지역이름 = location[i].name;
+
+              //데이터가 들어 있으면
+              apartData.forEach((obj, index) => {
+                // console.log(obj);
+                let resultObject = {};
+
+                obj.커스텀지역 = {
+                  _text: 지역이름,
+                };
+
+                for (let key in obj) {
+                  //객체 안에 반복문을 돌리는 for in반복문
+                  const value =
+                    obj[key]?._text === undefined
+                      ? null
+                      : obj[key]?._text.replaceAll(" ", ""); //공백을 없애는 기능
+
+                  const 키다시정의 = a[key]; //sql 컬럼에에 맞게 재정의  ex. 키다시정의 = a[거래금액] ==> trading_price
+
+                  resultObject[키다시정의] = value; //resultObject[]
+                }
+                result.push(resultObject);
+              });
+
+              let cnt = 0;
+
+              for await (let item of result) {
+                const 쿼리 = 인서트만들기({
+                  table: "apart",
+                  data: item,
+                });
+
+                await 디비실행({
+                  database: "project_apart",
+                  query: 쿼리,
+                });
+                cnt++;
+              }
+
+              // res.send(result);
+              // console.log(result);
             }
-            result.push(resultObject);
-          });
+          );
         }
-
-        console.log("mariaDB에 넣기 위한 코드===========================");
-        console.log("result값");
-        console.log(result);
-
-        console.log(result.length);
-
-        let cnt = 0;
-
-        for await (let item of result) {
-          const 쿼리 = 인서트만들기({
-            table: "apart",
-            data: item,
-          });
-
-          console.log("실행중 ========>", cnt);
-
-          await 디비실행({
-            database: "project_apart",
-            query: 쿼리,
-          });
-          cnt++;
-        }
-
-        console.log("끝남");
-
-        res.send(result);
-        // console.log(result);
       }
-    );
+    }
+    res.send(result);
   } catch (e) {
     console.log(e);
   }
