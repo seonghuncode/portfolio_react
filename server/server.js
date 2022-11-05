@@ -187,7 +187,7 @@ app.get("/apartAPI", async function (req, res) {
         if (date < 10) {
           date = `0${date}`;
         }
-        console.log("월 ==> " + date);
+        // console.log("월 ==> " + date);
 
         for (let page = 1; page < 5; page++) {
           // 2022 1월부터 10월
@@ -216,7 +216,7 @@ app.get("/apartAPI", async function (req, res) {
               const apartData = apiData.response.body.items.item;
               const result = [];
 
-              console.log("아파트 데이터 길이", apartData?.length || 0); //길이가 없으면 0으로 표시
+              // console.log("아파트 데이터 길이", apartData?.length || 0); //길이가 없으면 0으로 표시
 
               const 길이 = apartData?.length || 0;
 
@@ -391,25 +391,25 @@ app.get("/apartAPI2", (req, res) => {
 //     },
 //   ],
 // };
-
-const UserDB = {
-  user: [
-    {
-      name: "테스트 name",
-      email: "test2@naver.com",
-      password: "123",
-    },
-    {
-      name: "관리자",
-      email: "test@naver.com",
-      password: "123",
-    },
-    {
-      nickname: "관리자",
-      backgroundUrl: "관리자",
-    },
-  ],
-};
+//------------------------------------------------------------------------------------------------------------
+// const UserDB = {
+//   user: [
+//     {
+//       name: "테스트 name",
+//       email: "test2@naver.com",
+//       password: "123",
+//     },
+//     {
+//       name: "관리자",
+//       email: "test@naver.com",
+//       password: "123",
+//     },
+//     {
+//       nickname: "관리자",
+//       backgroundUrl: "관리자",
+//     },
+//   ],
+// };
 //------------------------------------------------------------------------------------------------------------------userDB
 
 //---------------------------------------------------------------------------------------------------------------자동 로그인
@@ -430,14 +430,51 @@ req.session;
 //---------------------------------------------------------------------------------------------------------------자동 로그인
 
 //---------------------------------------------------------------------------------------------------------------카카오 로그인
-app.get("/kakaoLogin", (req, res) => {
+//카카오 로그인을 하고 나면(AppIndex에서 nickname,background_img를 보내준다.)
+app.get("/kakaoLogin", async (req, res) => {
   // console.log(req.query);
   // console.log(req.query.user); //이렇게 사용하면 문자열로 사용할 수 없다.
   console.log("클라이언트 에서 넘어온  user정보 입니다");
   console.log(JSON.parse(req.query.user));
   const user = JSON.parse(req.query.user);
+  console.log(user);
 
-  UserDB.user.push(user);
+  //---------------------------------------------------------------------------------------------------------
+  // UserDB.user.push(user); //현재 서버 디비에 저장
+
+  const data = await 디비실행({
+    database: "project_apart",
+    query: "SELECT * FROM user",
+  });
+  // console.log("data");
+  // console.log(data);
+
+  //디비에 동일한 카카오 nickname이 존재 하지 않을 경우만 디비에 저장 한다.
+  let a = 0;
+  for await (let item of data) {
+    //배열 에서 반복문
+    if (item.nickname === user.nickname) {
+      console.log("이미 DB에 저장된 카카오 회원 정보 입니다.");
+      a = 1;
+      break;
+    }
+  }
+
+  if (a !== 1) {
+    user.type = 2; //type 1 : 자체 로그인 정보를 의미, type 2 : 카카오 로그인 정보를 의미
+
+    const 쿼리 = 인서트만들기({
+      table: "user",
+      data: user,
+    });
+
+    await 디비실행({
+      database: "project_apart",
+      query: 쿼리,
+    });
+  }
+
+  //---------------------------------------------------------------------------------------------------------
 
   const result = {
     code: "success",
