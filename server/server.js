@@ -491,7 +491,7 @@ app.get("/kakaoLogin", async (req, res) => {
 //---------------------------------------------------------------------------------------------------------------카카오 로그인
 
 //회원 가입을 진행하는 서버----------------------------------------------------------------------------------------------------
-app.get("/join", (req, res) => {
+app.get("/join", async (req, res) => {
   console.log("회원가입 서버 입니다");
   console.log(JSON.parse(req.query.user));
 
@@ -540,24 +540,50 @@ app.get("/join", (req, res) => {
       break;
     }
 
-    const checkExistEmail = UserDB.user.findIndex((item) => {
-      return item.email === email;
+    const data = await 디비실행({
+      database: "project_apart",
+      query: "SELECT * FROM user",
     });
-    console.log("checkExistEmail");
-    console.log(checkExistEmail);
-    if (checkExistEmail !== -1) {
+    let checkExistEmail = 0;
+
+    for await (let item of data) {
+      if (item.email === email) {
+        checkExistEmail = -1;
+
+        break;
+      }
+    }
+
+    if (checkExistEmail === -1) {
       //존재 하는 값이 없을 경우 -1이 나온다
       result.code = "fail";
       result.message = "해당 email은 이미 존재하는 email입니다.";
       break;
     }
+
+    if (checkExistEmail === 0) {
+      const saveUser = {
+        //DB에 저장할 것만 따로 모아 객체로 만들어 준다.
+        name: name,
+        email: email,
+        password: password1,
+        type: 1,
+      };
+
+      const 쿼리 = 인서트만들기({
+        table: "user",
+        data: saveUser,
+      });
+
+      await 디비실행({
+        database: "project_apart",
+        query: 쿼리,
+      });
+      break;
+    }
   }
 
-  UserDB.user.push(user);
-  result.user = user;
   res.send(result);
-  console.log("저장이 되었는지 확인 하기");
-  console.log(UserDB);
 });
 
 //회원 가입을 진행하는 서버----------------------------------------------------------------------------------------------------

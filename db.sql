@@ -21,8 +21,15 @@ CREATE TABLE `user`(
   email CHAR(50),
   `password` CHAR(50),
   nickname CHAR(50),
+  backgourndUrl VARCHAR(10),
   `type` INT(2) NOT NULL 
 )
+
+ALTER TABLE `user`
+CHANGE COLUMN backgourndUrl backgroundUrl
+VARCHAR(10);
+
+SELECT * FROM `user`
 
 
 #insert into 테이블명(id,pw) values('dfdf', 'dfdfdfdf'); or아래 방법 으로 테이블 값 넣기
@@ -43,6 +50,7 @@ SET nickname = "kakauser",
 
 
 SELECT * FROM `user`;
+TRUNCATE `user`;
 
 
 
@@ -76,7 +84,8 @@ broker VARCHAR(10),
 number_code VARCHAR(10) NOT NULL,
 `floor` VARCHAR(10) NOT NULL,
 clear_reason VARCHAR(10),
-clear VARCHAR(10)
+clear VARCHAR(10),
+location VARCHAR(10) NOT NULL
 )
 
 SELECT * FROM apart;
