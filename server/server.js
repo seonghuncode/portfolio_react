@@ -589,7 +589,7 @@ app.get("/join", async (req, res) => {
 //회원 가입을 진행하는 서버----------------------------------------------------------------------------------------------------
 
 //일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------
-app.get("/login", (req, res) => {
+app.get("/login", async (req, res) => {
   console.log(req.query);
   console.log(JSON.parse(req.query.user));
 
@@ -620,11 +620,14 @@ app.get("/login", (req, res) => {
       break;
     }
 
-    const findUser = UserDB.user.find((item) => {
+    const data = await 디비실행({
+      database: "project_apart",
+      query: "SELECT * FROM user",
+    });
+
+    const findUser = data.find((item) => {
       return item.email === email && item.password === password;
     });
-    console.log("=============findUser====================");
-    console.log(findUser);
 
     if (findUser === undefined) {
       result.code = "fail";
