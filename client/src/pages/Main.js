@@ -58,8 +58,12 @@ function Main() {
     })
       .then((response) => {
         // 랜덤값 5개를 뽑는 알고리즘
-        console.log("response");
-        console.log(response);
+
+        //값이 없으면 끝내기
+        if (response.data.length === 0) {
+          return;
+        }
+
         const a = getRandom(response.data.length - 5); //시작값
         const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
         for (var i = a; i <= b; i++) {
@@ -86,6 +90,8 @@ function Main() {
   const REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao"; //KAKAO DEDVELOPER에서 설정한 REDIRECT URI 그대로 가지고 온다
 
   const 카카오소셜로그인링크 = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`; //이 경로로 보내주어야 한다, 카카오 공식 문서에서 이렇게 보내라고 정해 놓았다
+
+  console.log(apartData);
 
   return (
     <div>
