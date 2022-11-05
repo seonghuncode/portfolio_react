@@ -10,7 +10,15 @@ function Join() {
     password: "",
   });
 
-  const { loginUser, setLoginUser } = React.useContext(StoreContext);
+  const [loginUser, setLoginUser] = React.useState({
+    backgroundUrl: "",
+    email: "",
+    id: "",
+    name: "",
+    nickname: "",
+    password: "",
+    type: "",
+  });
 
   //카카오톡 로그인을 위한 키 변수 설정
   const KAKAO_API_KEY = "98c3a78c484879e5166cd2cdb417472b"; //rest api키
@@ -83,6 +91,9 @@ function Join() {
               if (data.code === "fail") {
                 alert(data.message);
               }
+              setLoginUser(data.user);
+              console.log("data~~~~~");
+              console.log(data);
 
               if (data.code === "success") {
                 console.log("=============================================");

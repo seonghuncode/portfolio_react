@@ -590,8 +590,8 @@ app.get("/join", async (req, res) => {
 
 //일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------
 app.get("/login", async (req, res) => {
-  console.log(req.query);
-  console.log(JSON.parse(req.query.user));
+  // console.log(req.query);
+  // console.log(JSON.parse(req.query.user));
 
   const userInfo = JSON.parse(req.query.user);
   const email = userInfo.email;
@@ -636,7 +636,7 @@ app.get("/login", async (req, res) => {
       break;
     }
     result.user = findUser;
-    console.log(findUser);
+    // console.log(findUser);
   }
   //로그인이 최종적으로 되면 세션을 넣어 주어야 한다
   req.session.loginUser = userInfo;
@@ -646,3 +646,16 @@ app.get("/login", async (req, res) => {
   res.send(result);
 });
 //일반 로그인 진행하는 서버---------------------------------------------------------------------------------------------------
+
+//--------------------------------------------로그아웃 하면 모든 세션 지우기
+app.get("/logout", (req, res) => {
+  console.log("logout");
+
+  req.session.destroy(function () {
+    req.session;
+  });
+
+  res.send("a");
+});
+
+//--------------------------------------------로그아웃 하면 모든 세션 지우기

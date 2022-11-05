@@ -95,6 +95,9 @@ function Main() {
 
   return (
     <div>
+      {console.log("======================")}
+      {console.log(loginUser)}
+      {console.log("===========================")}
       안녕하세요 {loginUser.nickname} {loginUser.name} 님 !{""}
       <Test />
       {/* 컴포넌트함수 실행 */}
@@ -110,6 +113,19 @@ function Main() {
             className="main-login btn-nomal-main"
             onClick={async () => {
               localStorage.removeItem("loginUser");
+
+              //서버에 접속해서 연결된 세션 모두 삭제하기
+              await axios({
+                //sessionStorage.clear();
+                url: "http://localhost:5000/logout",
+                withCredentials: true,
+              })
+                .then((response) => {
+                  console.log("연결된 세션을 모두 삭제 했습니다.");
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
 
               await window.Kakao.API.request({
                 url: "/v1/user/unlink",
