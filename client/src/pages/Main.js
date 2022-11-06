@@ -154,6 +154,7 @@ function Main() {
               navigation("/join");
             }}
           />
+
           <input
             type="button"
             className="main-login btn-nomal-main"

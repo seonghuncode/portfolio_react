@@ -6,8 +6,11 @@ import { StoreContext } from "../App";
 function Join() {
   const navigation = useNavigate();
   const [user, setUser] = React.useState({
+    // ==> 일반 회원이 로그인 할 경우 정보를 담을 객체
+    name: "",
     email: "",
     password: "",
+    type: "",
   });
 
   const [loginUser, setLoginUser] = React.useState({

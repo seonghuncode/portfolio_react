@@ -419,7 +419,7 @@ app.get("/autoLogin", (req, res) => {
   console.log(req.session);
   console.log("AUTO LOGIN ================================");
 
-  res.send("");
+  res.send(req.session);
 });
 
 /**
@@ -629,6 +629,8 @@ app.get("/login", async (req, res) => {
       return item.email === email && item.password === password;
     });
 
+    //console.log(findUser); //id,pw가 일치하는 회원에 대한 정보를 담고 있다.
+
     if (findUser === undefined) {
       result.code = "fail";
       result.message =
@@ -636,8 +638,17 @@ app.get("/login", async (req, res) => {
       break;
     }
     result.user = findUser;
+
     // console.log(findUser);
   }
+
+  // //로그인 할경우 클라이언트 에서 받아오는 정보는 id,pw뿐이기 때문에 DB에 일치하는 정보가 있다면 세션에 저장할 userInfo에 추가적인 정보를 추가하여 넣어 준다 ==> 추후에 클라이언트 에서 세션을 사용할때 필요한 정보
+  if (result.user !== null) {
+    userInfo.name = result.user.name;
+    userInfo.type = result.user.type;
+  }
+  // console.log("==============================");
+  // console.log(userInfo);
   //로그인이 최종적으로 되면 세션을 넣어 주어야 한다
   req.session.loginUser = userInfo;
   req.session.save((error) => {
