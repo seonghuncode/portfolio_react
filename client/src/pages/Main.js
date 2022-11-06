@@ -83,7 +83,7 @@ function Main() {
   }, []); //빈 배열을 넣어 주어야 한번만 실행 된다.(없으면 랜더링 될때마다 실행)
 
   //로그인 괸련 변수 선언
-  const { loginUser, setLoginUser } = React.useContext(StoreContext);
+  const { loginUser, setLoginUser } = React.useContext(StoreContext); //현재 세션에 저장되어 있는 회원 정보에 따라 세션에 회원 정보 저장
   //카카오톡 로그인을 위한 키 변수 설정
   const KAKAO_API_KEY = "98c3a78c484879e5166cd2cdb417472b"; //rest api키
   const KAKAO_CLIENT_ID = "5be66241f725b198c523fb70a432a8b6"; //javascript키
@@ -92,6 +92,20 @@ function Main() {
   const 카카오소셜로그인링크 = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`; //이 경로로 보내주어야 한다, 카카오 공식 문서에서 이렇게 보내라고 정해 놓았다
 
   console.log(apartData);
+
+  //--------------------------------------------------------------------------------------input 타입의 버튼에서 로그인 상태에 따라 disabled 여부를 결정할 함수 (함수면 대문자 시작)
+  const LoginStatus = () => {
+    if (loginUser.name !== "" || loginUser.nickname !== "") {
+      return "disabled";
+    } else {
+      return "";
+    }
+  };
+
+  const loginStatus = LoginStatus();
+  console.log("loginStatus");
+  console.log(loginStatus);
+  //-----------------------------------------------------------------------------
 
   return (
     <div>
@@ -154,8 +168,8 @@ function Main() {
               navigation("/join");
             }}
           />
-
           <input
+            disabled={loginStatus}
             type="button"
             className="main-login btn-nomal-main"
             value="로그인"

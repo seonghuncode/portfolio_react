@@ -50,9 +50,6 @@ function App() {
       const 로그인했을때비접근주소 = ["join", "login"];
       const 주소 = pathname.slice(1); //맨앞에 있는 문자열 지우는 코드 맨앞"/"를 지운다(==1번 위치 부터 나오라는 의미)
 
-      console.log("data.nickname");
-      console.log(data.loginUser);
-
       //setLoginUser(data.loginUser);
       if (data.loginUser) {
         console.log("데이터가 존재 합니다");
@@ -64,12 +61,13 @@ function App() {
       //주소가 배열에 포함되어 있는 것이라면 + 로그인이 되어 있다면
       //login, join으로 접근하면 ==>  /페이지로 자동으로 보낸다.
       if (로그인했을때비접근주소.includes(주소)) {
-        console.log("data.nickname");
-        console.log(data.nickname);
+        console.log("data.nickname / data.name");
+        console.log(data.nickname, data.name);
+
         if (data.loginUser.nickname !== "" || data.loginUser.name !== "") {
           //세션에 값이 존재하면 회원가입, 로그인 버튼을 누르면 홈으로 이동
           navigation("/");
-        }
+        } // ==> 주소가 join or login이면서 nickname or name에 값이 있으면 새로고침 하면 홈화면으로 돌아가라
       }
     });
 
