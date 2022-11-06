@@ -108,7 +108,9 @@ function Join() {
                 console.log("=============================================");
                 // localStorage.setItem("loginUser", JSON.stringify(data.user));
                 alert(data.user.name + "님 환영합니다.");
-                navigation("/");
+                // navigation("/");  ==> navigation의 경우 새로고침을 해주지 않는다.
+                //==> 로그인, 로그안웃의 경우 에는 window.location 을 사용하여 새로고침을 해주게 자연스럽다.
+                window.location.href = "/";
               }
             });
           };

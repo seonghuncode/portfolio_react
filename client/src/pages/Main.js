@@ -160,6 +160,7 @@ function Main() {
               })
                 .then((response) => {
                   console.log("연결된 세션을 모두 삭제 했습니다.");
+                  window.location.href = "/";
                 })
                 .catch((e) => {
                   console.log(e);
@@ -179,8 +180,8 @@ function Main() {
                 id: "",
                 pw: "",
               });
-              // navigation("/login");
-              navigation("/");
+              // navigation("/");
+              // window.location.href = "/";
             }}
             value=" 로그아웃"
           />

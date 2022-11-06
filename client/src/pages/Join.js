@@ -110,7 +110,8 @@ function Join() {
               }
               if (data.code === "success") {
                 alert("회원가입이 완료 되었습니다.");
-                navigation("/");
+                // navigation("/");
+                window.location.href = "/";
               }
             });
           };
