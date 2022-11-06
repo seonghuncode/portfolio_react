@@ -105,6 +105,28 @@ function Main() {
   const loginStatus = LoginStatus();
   console.log("loginStatus");
   console.log(loginStatus);
+
+  //로그인 상태에 따라 버튼 비활성화를 색으로 표현해주기 위한 함수
+  const LogoutColor = () => {
+    if (loginUser.name !== "" || loginUser.nickname !== "") {
+      return "";
+    } else {
+      return "black";
+    }
+  };
+
+  const logoutColor = LogoutColor();
+
+  const LoginColor = () => {
+    if (loginUser.name !== "" || loginUser.nickname !== "") {
+      return "black";
+    } else {
+      return "";
+    }
+  };
+
+  const loginColor = LoginColor();
+
   //-----------------------------------------------------------------------------
 
   return (
@@ -123,7 +145,9 @@ function Main() {
             value="오늘의 부동산"
           />
           <input
+            disabled={!loginStatus}
             type="button"
+            style={{ color: logoutColor }}
             className="main-login btn-nomal-main"
             onClick={async () => {
               localStorage.removeItem("loginUser");
@@ -161,8 +185,10 @@ function Main() {
             value=" 로그아웃"
           />
           <input
+            disabled={loginStatus}
             type="button"
             className="main-login btn-nomal-main"
+            style={{ color: loginColor }}
             value="회원가입"
             onClick={() => {
               navigation("/join");
@@ -173,6 +199,7 @@ function Main() {
             type="button"
             className="main-login btn-nomal-main"
             value="로그인"
+            style={{ color: loginColor }}
             onClick={() => {
               navigation("/login");
               //window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다

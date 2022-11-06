@@ -42,6 +42,10 @@ li {
   border: 1px solid white;
 }
 
+.main-login:hover {
+  color: rosybrown;
+}
+
 /*메인 에서 상단 파란 배경 전체를 담는 최 상단*/
 .mainFrame {
   display: flex;
