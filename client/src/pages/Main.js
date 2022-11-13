@@ -127,6 +127,9 @@ function Main() {
 
   const loginColor = LoginColor();
 
+  //검색란에 입력된 값에 따라 1.검색어와 일치하는 데이터만 보여주기 2. 일치하는 값이 없을 경우 없다고 알려주기 3. 검색어가 입력되지 않으면 랜덤으로 5개만 보여주기
+  const [searchType, setSearchType] = React.useState();
+
   //-----------------------------------------------------------------------------
 
   return (
@@ -203,7 +206,7 @@ function Main() {
             style={{ color: loginColor }}
             onClick={() => {
               navigation("/login");
-              //window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다
+              //window.location.href = 카카오소셜로그인링크; //위의 설정한 경로로 이동 -> 여기로 가면 AppIndex에서 카카오데이터 함수로 가도록 설정 되어 있다.
             }}
           />
 
@@ -232,6 +235,14 @@ function Main() {
                 className="search"
                 type="text"
                 placeholder="지역 또는 단지명을 입력하세요. "
+                onChange={(event) => {
+                  //만약 검색창에 입력어가 있으면 해당 검색어에 대한 정보만 보여주기,
+                  //일치하는게 없으면 없다고 알려주가,
+                  //검색어를 입력하지 않으면 랜덤으로 5개만 보여주기(여기서 값을 통해 변수를 true,false로 만들어 true일때만 아래서 실행되도록 수정)
+                  //event.target.value ==> 입력창에 입력된 값 -> searchType에 값을 넣어준다.
+                  setSearchType(event.target.value);
+                  console.log("searchType : " + searchType);
+                }}
               />
               <button className="icon-main" type="submit">
                 <FontAwesomeIcon

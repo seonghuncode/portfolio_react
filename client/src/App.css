@@ -40,6 +40,8 @@ li {
   float: right;
   margin-right: 10px;
   border: 1px solid white;
+  padding: 3px;
+  text-align: center;
 }
 
 .main-login:hover {
