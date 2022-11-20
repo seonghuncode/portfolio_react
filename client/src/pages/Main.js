@@ -27,13 +27,23 @@ function Test() {
 
 function Main() {
   const navigation = useNavigate();
-  const [apartData, setapartData] = React.useState();
+  const [apartData, setapartData] = React.useState(); //랜덤으로 뽑은 아파트 데이터 즉 ramdomValue가 들어가 있다.
   const [loading, setLoading] = React.useState(true); //아래서 삼항식을 통해 true이면 로딩화면을 false이면 회면을 보여주기 위한 변수
   const randomValue = []; //랜덤값을 넣기 위한 배열
+  const [allApartData, setAllApartData] = React.useState([]); //검색어 기능을 위해 전체 데이터를 담고 있는 배열
+
+  //검색란에 입력된 값에 따라 1.검색어와 일치하는 데이터만 보여주기 2. 일치하는 값이 없을 경우 없다고 알려주기 3. 검색어가 입력되지 않으면 랜덤으로 5개만 보여주기
+  const [searchType, setSearchType] = React.useState();
+  console.log("searchType은??");
+  console.log(searchType);
+  if (searchType === "") {
+    console.log("searchType이 비어있습니다."); //검색어를 타이핑 할때 콘솔에 찍히는게 한스템씩 느림
+  }
 
   //랜덤 값으로 5개를 무작위로
   const getRandom = function (length) {
-    return parseInt(Math.random() * length);
+    //length는 API로 부터 받은 전체 길이에서 5를 뺀 길이 이다.
+    return parseInt(Math.random() * length); //랜덤값은 0 ~ lenth까지중 랜덤수를 리턴해 준다.
   };
 
   //리액트에서 api를 불러오는 방법이 아니라 server에서 불러오기  (DB에 값이 없을때만 수동으로 url입력해서 넣어주기)
@@ -64,6 +74,8 @@ function Main() {
           return;
         }
 
+        setAllApartData(response.data);
+
         const a = getRandom(response.data.length - 5); //시작값
         const b = a + 4; //끝값  ==> 화면에 5개의 정보를 보여주기 위해서는 차이가 5
         for (var i = a; i <= b; i++) {
@@ -91,7 +103,67 @@ function Main() {
 
   const 카카오소셜로그인링크 = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`; //이 경로로 보내주어야 한다, 카카오 공식 문서에서 이렇게 보내라고 정해 놓았다
 
-  console.log(apartData);
+  // console.log("랜덤한 아파트 데이터");
+  // console.log(apartData);
+  // console.log("모든 아파트 데이터");
+  // console.log(allApartData);
+
+  //------------------------------------------------------------검색어와 일치하는 데이터만 리턴해 주는 함수
+  const sameData = [];
+  function SearchValue() {
+    //우선 아파트 이름과 동일한 검색만 되도록 하는 기능 ==> 추후에 검색 가능한 기능 늘라기
+    allApartData.map((value, index) => {
+      if (value.apart_name.includes(searchType)) {
+        // console.log("if문에 만족하느 value값");
+        // console.log(value);
+        sameData.push(value);
+      }
+    });
+    // setContainData(...sameData);
+    console.log("==============================");
+    console.log("==============================");
+    console.log("==============================");
+    console.log(sameData);
+    // console.log(containData);
+
+    sameData.map((item, index) => {
+      return (
+        <div key={index}>
+          <div className="recommend-frame">
+            <div>아파트 : {item.apart_name}</div>
+            <div>거래 금액 : {item.trading_price} (단위:만원)</div>
+            <div>건축 년도 : {item.year_of_constuction}</div>
+            <div>
+              주소 : {item.raod_name}
+              {item.number}
+            </div>
+            <div>
+              지도 보기 :
+              <a
+                // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
+                href={`https://www.google.com/maps/place/${item.raod_name}${item.number}${item.apart_name}아파트`}
+                target={"_black"}
+              >
+                지도
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
+
+  SearchValue();
+  console.log("========================>실행 과정");
+  console.log(sameData);
+  // console.log(sameData);
+  // console.log("검색어와 일치하는 데이터들 =====>");
+  // // console.log(containData);
+  // // console.log(allApartData);
+  // console.log(sameData);
+
+  //------------------------------------------------------------검색어와 일치하는 데이터만 리턴해 주는 함수  ==> 현재 문제 검색어를 입력하면 해당 값이 sameData에는 저장되나 리턴시
+  //출력이 않된다.
 
   //--------------------------------------------------------------------------------------input 타입의 버튼에서 로그인 상태에 따라 disabled 여부를 결정할 함수 (함수면 대문자 시작)
   const LoginStatus = () => {
@@ -126,12 +198,6 @@ function Main() {
   };
 
   const loginColor = LoginColor();
-
-  //검색란에 입력된 값에 따라 1.검색어와 일치하는 데이터만 보여주기 2. 일치하는 값이 없을 경우 없다고 알려주기 3. 검색어가 입력되지 않으면 랜덤으로 5개만 보여주기
-  const [searchType, setSearchType] = React.useState();
-  if (searchType === "") {
-    console.log("searchType이 비어있습니다."); //검색어를 타이핑 할때 콘솔에 찍히는게 한스템씩 느림
-  }
 
   //-----------------------------------------------------------------------------
 
@@ -290,30 +356,38 @@ function Main() {
           {apartData && //apartData && ==> 값이 있으면 출력하라는 의미
             apartData.map((item, index) => {
               console.log(item);
-              return (
-                <div key={index}>
-                  <div className="recommend-frame">
-                    <div>아파트 : {item.apart_name}</div>
-                    <div>거래 금액 : {item.trading_price} (단위:만원)</div>
-                    <div>건축 년도 : {item.year_of_constuction}</div>
-                    <div>
-                      주소 : {item.raod_name}
-                      {item.number}
-                    </div>
-                    <div>
-                      지도 보기 :
-                      <a
-                        // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
-                        href={`https://www.google.com/maps/place/${item.raod_name}${item.number}${item.apart_name}아파트`}
-                        target={"_black"}
-                      >
-                        지도
-                      </a>
+              if (searchType === "" || searchType === undefined) {
+                //검색창에 검색어가 입력 되어 있지 않다면 랜덤으로 뽑은 아파트 매물들을 보여주어라
+                return (
+                  <div key={index}>
+                    <div className="recommend-frame">
+                      <div>아파트 : {item.apart_name}</div>
+                      <div>거래 금액 : {item.trading_price} (단위:만원)</div>
+                      <div>건축 년도 : {item.year_of_constuction}</div>
+                      <div>
+                        주소 : {item.raod_name}
+                        {item.number}
+                      </div>
+                      <div>
+                        지도 보기 :
+                        <a
+                          // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
+                          href={`https://www.google.com/maps/place/${item.raod_name}${item.number}${item.apart_name}아파트`}
+                          target={"_black"}
+                        >
+                          지도
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
+                );
+              } else {
+                //else문을 작성하지 않아도 문제는 없지만 화살표 함수에서 ==> 부분에 경고가 뜨기때문에 안전하게 하기 위해 작성함
+                return false;
+              }
             })}
+          <SearchValue />
+          {/* 컴포턴트 명은 항상 대문자로 시작 */}
         </div>
       </div>
     </div>
