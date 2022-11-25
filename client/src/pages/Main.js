@@ -23,6 +23,7 @@ function Test() {
     </div>
   );
 }
+
 //-------------------------------------------------
 
 function Main() {
@@ -34,8 +35,8 @@ function Main() {
 
   //검색란에 입력된 값에 따라 1.검색어와 일치하는 데이터만 보여주기 2. 일치하는 값이 없을 경우 없다고 알려주기 3. 검색어가 입력되지 않으면 랜덤으로 5개만 보여주기
   const [searchType, setSearchType] = React.useState();
-  console.log("searchType은??");
-  console.log(searchType);
+  // console.log("searchType은??");
+  // console.log(searchType);
   if (searchType === "") {
     console.log("searchType이 비어있습니다."); //검색어를 타이핑 할때 콘솔에 찍히는게 한스템씩 느림
   }
@@ -57,6 +58,7 @@ function Main() {
       })
       .catch((e) => {
         console.log(e);
+        console.log("아파트 API를 불러오지 못 했습니다.");
       });
   };
 
@@ -109,53 +111,29 @@ function Main() {
   // console.log(allApartData);
 
   //------------------------------------------------------------검색어와 일치하는 데이터만 리턴해 주는 함수
-  const sameData = [];
-  function SearchValue() {
+
+  const [searchData, setSearchData] = React.useState();
+  function SearchValue(promp) {
+    const sameData = []; //아파트 이름중 검색어가 포함된 아파트 이름의 정보들을 저장
     //우선 아파트 이름과 동일한 검색만 되도록 하는 기능 ==> 추후에 검색 가능한 기능 늘라기
     allApartData.map((value, index) => {
-      if (value.apart_name.includes(searchType)) {
+      if (value.apart_name.includes(promp)) {
         // console.log("if문에 만족하느 value값");
         // console.log(value);
         sameData.push(value);
       }
     });
     // setContainData(...sameData);
-    console.log("==============================");
-    console.log("==============================");
-    console.log("==============================");
-    console.log(sameData);
+    // console.log("==============================");
+    // console.log("==============================");
+    // console.log("SearchValue가 실행 되었습니다========>>>");
+    // console.log(sameData);
     // console.log(containData);
-
-    sameData.map((item, index) => {
-      return (
-        <div key={index}>
-          <div className="recommend-frame">
-            <div>아파트 : {item.apart_name}</div>
-            <div>거래 금액 : {item.trading_price} (단위:만원)</div>
-            <div>건축 년도 : {item.year_of_constuction}</div>
-            <div>
-              주소 : {item.raod_name}
-              {item.number}
-            </div>
-            <div>
-              지도 보기 :
-              <a
-                // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
-                href={`https://www.google.com/maps/place/${item.raod_name}${item.number}${item.apart_name}아파트`}
-                target={"_black"}
-              >
-                지도
-              </a>
-            </div>
-          </div>
-        </div>
-      );
-    });
+    setSearchData(sameData);
   }
 
-  SearchValue();
-  console.log("========================>실행 과정");
-  console.log(sameData);
+  // console.log("========================>실행 과정");
+  // console.log(sameData);
   // console.log(sameData);
   // console.log("검색어와 일치하는 데이터들 =====>");
   // // console.log(containData);
@@ -310,7 +288,8 @@ function Main() {
                   //검색어를 입력하지 않으면 랜덤으로 5개만 보여주기(여기서 값을 통해 변수를 true,false로 만들어 true일때만 아래서 실행되도록 수정)
                   //event.target.value ==> 입력창에 입력된 값 -> searchType에 값을 넣어준다.
                   setSearchType(event.target.value);
-                  console.log("searchType : " + searchType);
+                  // console.log("searchType : " + searchType);
+                  SearchValue(event.target.value);
                 }}
               />
               <button className="icon-main" type="submit">
@@ -355,7 +334,7 @@ function Main() {
         <div className="recommend-high">
           {apartData && //apartData && ==> 값이 있으면 출력하라는 의미
             apartData.map((item, index) => {
-              console.log(item);
+              // console.log(item);
               if (searchType === "" || searchType === undefined) {
                 //검색창에 검색어가 입력 되어 있지 않다면 랜덤으로 뽑은 아파트 매물들을 보여주어라
                 return (
@@ -386,8 +365,42 @@ function Main() {
                 return false;
               }
             })}
-          <SearchValue />
-          {/* 컴포턴트 명은 항상 대문자로 시작 */}
+          {/* {console.log("===============")}
+           <SearchValue /> 
+          {console.log("1. sameData , 2. apartData")}
+          {console.log(sameData)} 
+          {console.log(apartData)}
+          컴포턴트 명은 항상 대문자로 시작  */}
+          {searchData &&
+            searchData.map((value, index) => {
+              // console.log("현재 검색어가 입력 되어있을때 searchType은>>>");
+              // console.log(searchType);
+              if (searchType.trim() !== "") {
+                return (
+                  <div key={index}>
+                    <div className="recommend-frame">
+                      <div>아파트 : {value.apart_name}</div>
+                      <div>거래 금액 : {value.trading_price} (단위:만원)</div>
+                      <div>건축 년도 : {value.year_of_constuction}</div>
+                      <div>
+                        주소 : {value.raod_name}
+                        {value.number}
+                      </div>
+                      <div>
+                        지도 보기 :
+                        <a
+                          // href={`https://www.google.com/maps/place/${item.도로명}${item.지번}`}
+                          href={`https://www.google.com/maps/place/${value.raod_name}${value.number}${value.apart_name}아파트`}
+                          target={"_black"}
+                        >
+                          지도
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+            })}
         </div>
       </div>
     </div>

@@ -267,7 +267,7 @@ app.get("/apartAPI", async function (req, res) {
               }
 
               // res.send(result);
-              // console.log(result);
+              console.log(result);
             }
           );
         }

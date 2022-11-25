@@ -143,12 +143,12 @@ li {
 
 .recommend-frame {
   border: 1px solid black;
-  width: 310px;
-  height: 200px;
+  width: 250px;
+  height: 150px;
   display: inline-block;
   margin: 3px;
-  padding: 20px;
-  font-size: 20px;
+  padding: 25px;
+  font-size: 13px;
 }
 
 /*========================== Main.js에 대한 CSS==================================*/
