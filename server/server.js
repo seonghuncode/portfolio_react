@@ -212,6 +212,8 @@ app.get("/apartAPI", async function (req, res) {
                 compact: true,
                 spaces: 4,
               });
+              // console.log("===============================");
+              // console.log(apiData);
               const apiData = JSON.parse(xmlToJson);
               const apartData = apiData.response.body.items.item;
               const result = [];

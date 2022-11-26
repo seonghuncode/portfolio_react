@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Main, Join, Login } from "./pages";
+import { Main, Join, Login, AllData } from "./pages";
 import qs from "qs";
 import axios from "axios";
 import { StoreContext } from "./App";
@@ -111,6 +111,7 @@ function AppIndex() {
       <Route exact path="join" element={<Join />} />
       <Route exaxt path="/login" element={<Login />} /> 초기 로그인 코드
       <Route exaxt path="/oauth/callback/kakao" element={<카카오데이터 />} />
+      <Route exaxt path="/AllData" element={<AllData />} />
     </Routes>
   );
 }

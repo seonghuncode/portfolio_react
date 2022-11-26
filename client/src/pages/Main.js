@@ -257,15 +257,17 @@ function Main() {
             }}
           />
 
+          <a href="https://land.naver.com/news/" target="_black">
+            <input
+              type="button"
+              className="main-login btn-nomal-main"
+              style={{ float: "right" }}
+              value="오늘의 뉴스"
+            />
+          </a>
           <input
             type="button"
-            className="btn-nomal-main"
-            style={{ float: "right" }}
-            value="오늘의 뉴스"
-          />
-          <input
-            type="button"
-            className="btn-nomal-main"
+            className="main-login btn-nomal-main"
             style={{ float: "right" }}
             value="지도"
           />
@@ -307,7 +309,6 @@ function Main() {
       <div className="bottom-area">
         <div>
           <div className="introduce" type="button" value="추천매물">
-            추천매물
             <button
               type="button"
               style={{
@@ -318,12 +319,21 @@ function Main() {
                 findeDataFromDB();
               }}
             >
+              추천매물
               {/* 버튼을 누르면 추천 매물 리로딩 */}
-              <FontAwesomeIcon
-                style={{ padding: "1px" }}
-                icon={faMagnifyingGlassLocation}
-                size="2x"
-              />
+            </button>
+            <span style={{ margin: "10px" }}>/</span>
+            <button
+              type="button"
+              style={{
+                backgroundColor: "transparent",
+                border: "none",
+              }}
+              onClick={() => {
+                navigation("allData");
+              }}
+            >
+              전체 매물 보기
             </button>
           </div>
         </div>
@@ -345,7 +355,7 @@ function Main() {
                       <div>건축 년도 : {item.year_of_constuction}</div>
                       <div>
                         주소 : {item.raod_name}
-                        {item.number}
+                        {item.number} ({item.location})
                       </div>
                       <div>
                         지도 보기 :
@@ -384,7 +394,7 @@ function Main() {
                       <div>건축 년도 : {value.year_of_constuction}</div>
                       <div>
                         주소 : {value.raod_name}
-                        {value.number}
+                        {value.number} ({value.location})
                       </div>
                       <div>
                         지도 보기 :

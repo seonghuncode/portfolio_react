@@ -143,12 +143,12 @@ li {
 
 .recommend-frame {
   border: 1px solid black;
-  width: 250px;
-  height: 150px;
+  width: 240px;
+  height: 130px;
   display: inline-block;
   margin: 3px;
   padding: 25px;
-  font-size: 13px;
+  font-size: 11px;
 }
 
 /*========================== Main.js에 대한 CSS==================================*/
@@ -222,3 +222,35 @@ li {
 }
 
 /* =======================회원가입에 대한 페이지 css======================== */
+
+/* =======================모든 아파트 데이터(전체 매물)을 보여주는 css======================== */
+.topTable {
+  border-collapse: collapse;
+}
+
+.thead {
+  background-color: yellowgreen;
+}
+.tbody {
+  background-color: burlywood;
+}
+
+.th-td {
+  border: 0.5px solid black;
+  padding: 5px;
+  text-align: center;
+}
+
+.TopCenter {
+  display: flex;
+  justify-content: center; /* 가로에서 센터로 */
+
+  /* 세로중 가운데로 오도록 하기 */
+  align-items: center;
+  height: 100vh;
+
+  /* 세로로 나오기 */
+  flex-direction: column;
+}
+
+/* =======================모든 아파트 데이터(전체 매물)을 보여주는 css======================== */
