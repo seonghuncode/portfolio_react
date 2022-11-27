@@ -411,6 +411,15 @@ function Main() {
                 );
               }
             })}
+          {/* {console.log("searchDatat =====>")}
+          {console.log(searchData)} */}
+          {searchData.length === 0 ? (
+            <div style={{ color: "red" }}>
+              검색어와 일치 하는 아파트 이름은 존재 하지 않습니다.
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>
