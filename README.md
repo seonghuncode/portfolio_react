@@ -169,9 +169,9 @@ console.log(xmlToJson)
 ->원하는 것 클릭,  웹 이름, 사업자 명, 체크 , 저장
 ->추가된다 -> 추가된것을 들어 간다
 ->플랫폼 설정하기 -> web플랫폼 등록(현재 web에서만 사용하기 때문에 이것만 사용한다)
-->web 플랫폼 등록 -> 사이트 도메인 (ex. http://localhost:3000)
+->web 플랫폼 등록 -> 사이트 도메인 `(ex. http://localhost:3000)`
 ->redirect url등록 -> 등록하러 가기 -> 활성화 설정 ON
-->redirect url 등록 -> http://localhost:3000/oauth/callback/kakao -> 설정
+->redirect url 등록 -> `http://localhost:3000/oauth/callback/kakao` -> 설정
 ->왼쪽 카카오 로그인 동의 항목 -> 설정 닉네임 필수 동의  목적:테스트 개발 중 입니다
 ->프로필 사진 필수 동의 -> 목적 : 테스트 개발 중 입니다. (원하는 정보들 있으면 이렇게 체크)
 ==>kakao developers 설정 완료 나머지는 코드로 구현
@@ -182,10 +182,10 @@ REST API키, JavaScript키 필요
 [용어, 기본 내용 정리]:
 ->callback : 부르고 뒤로 보낸다.(부르고 우리가 사용할 곳으로 보낸다) -> 보안 때문에 사용
 로그인 할때 해당 로그인 버튼이 있다면 거기로 요청해야 한다 url, 새로고침 하면을 하면 보안상 데이터를 받을 수 없다
-index.html -> <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>추가 (카카오에 있는 데이터를 받기 위해서는 카카오 자바스크립트를 추가 해주어야 한다.)
-
-📌AWS클라이언트 올리는 방법 정리  https://velog.io/@gnos456/AWS%EC%82%AC%EC%9A%A9%EB%B2%95
-📌AWS서버 부분 올리는 방법 정리 https://velog.io/@gnos456/AWS%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%84%9C%EB%B2%84DB-%EB%B6%80%EB%B6%84
+`index.html -> <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>`추가 (카카오에 있는 데이터를 받기 위해서는 카카오 자바스크립트를 추가 해주어야 한다.)
+ 
+📌AWS클라이언트 올리는 방법 정리  https://velog.io/@gnos456/AWS%EC%82%AC%EC%9A%A9%EB%B2%95  <br>
+📌AWS서버 부분 올리는 방법 정리 https://velog.io/@gnos456/AWS%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%84%9C%EB%B2%84DB-%EB%B6%80%EB%B6%84  <br>
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
